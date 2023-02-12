@@ -1,7 +1,16 @@
-import { useTranslationGetAllQuery } from "@/queries";
+import { useTranslationGetAllQuery, useTranslationPutMutation } from "@/queries";
 
 export default function Home() {
 	const query = useTranslationGetAllQuery();
+	const mutation = useTranslationPutMutation();
+
+	function handleClick() {
+		mutation.mutate({
+			projectId: "1",
+			translationKey: (Math.random() + 1).toString(36).substring(7),
+			languages: [{ language: "IT", content: (Math.random() + 1).toString(36).substring(7) }],
+		});
+	}
 
 	if (query.isLoading) return <div>...is loading</div>;
 	else if (query.error) return <div>Error fetching translations</div>;
@@ -19,6 +28,7 @@ export default function Home() {
 			) : (
 				<div>No translations found</div>
 			)}
+			<button onClick={handleClick}>add random translation</button>
 		</div>
 	);
 }

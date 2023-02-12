@@ -6,9 +6,9 @@ type AuthState = {
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
-	auth: localStorage.getItem("user") || null,
+	auth: localStorage.getItem("auth") || null,
 	setAuth: (arg: string) => {
-		localStorage.setItem("user", arg)
+		localStorage.setItem("auth", arg)
 		set(() => ({ auth: arg }))
 	},
 }))

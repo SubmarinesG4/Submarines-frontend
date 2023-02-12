@@ -4,8 +4,12 @@ import axios from "axios";
 async function getDefaulHeaders() {
 	/* 	const user = await Auth.currentAuthenticatedUser();
 		const token = user.signInUserSession?.idToken?.jwtToken; */
-	const token = ""
-	return { headers: { 'Authorization': `Bearer ${token}` } }
+	const token = localStorage.getItem("auth")
+	if (token) {
+		return { headers: { 'Authorization': `Bearer ${token}` } }
+	} else {
+		return {}
+	}
 }
 
 const axiosInstance = axios.create({
@@ -18,7 +22,7 @@ export async function getData<T>(url: string) {
 	return axiosInstance.get<T>(url, defHeaders);
 }
 
-export async function putData(url: string, data: unknown) {
+export async function putData<T>(url: string, data: unknown) {
 	const defHeaders = await getDefaulHeaders();
-	return axiosInstance.put(url, data, defHeaders);
+	return axiosInstance.put<T>(url, data, defHeaders);
 }

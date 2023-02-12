@@ -21,7 +21,7 @@ export default function Login() {
 	const [message, setMessage] = useState<string>("");
 
 	function formSubmitHandler(data: FormValues) {
-		setAuth("userNumberOne");
+		setAuth("test");
 	}
 
 	return (

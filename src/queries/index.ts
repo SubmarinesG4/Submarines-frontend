@@ -2,6 +2,7 @@ import { QueryClient } from "react-query";
 
 import { useTranslationGetQuery } from "./useTranslationGetQuery";
 import { useTranslationGetAllQuery } from "./useTranslationGetAllQuery";
+import { useTranslationPutMutation } from "./useTranslationPutMutation";
 
 const queryClient = new QueryClient({
 	defaultOptions: {
@@ -12,4 +13,4 @@ const queryClient = new QueryClient({
 	},
 })
 
-export { queryClient, useTranslationGetQuery, useTranslationGetAllQuery }
+export { queryClient, useTranslationGetQuery, useTranslationGetAllQuery, useTranslationPutMutation }
