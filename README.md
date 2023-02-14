@@ -12,6 +12,14 @@ Progetto generato usando il template `react-ts` di [Vite](https://vitejs.dev/).
 A seguito dell'esecuzione di questi comandi verrà avviato una versione di sviluppo utilizzabile in locale dell'applicativo,
 raggiungibile all'indirizzo di base visualizzato nel terminale
 
+## Funzionalità attuali
+
+Inizialmente al caricamento della pagina l'utente viene reindirizzato ad una maschera di login, qualsiasi combinazione di username e password permetterà l'accesso.
+
+L'applicazione ricorderà l'utente tramite una entry settata nel `localStorage` del browser e non sarà necessario eseguire il login per accessi successivi.
+
+Dopo aver effettuato l'accesso l'utente verrà reindirizzato alla pagina principale in cui è visualizzabile una lista di chiavi di traduzione recuperate da backend, inoltre tramite il bottone sottostante la lista sarà possibile inserire una traduzione casuale e aggiornare la lista.
+
 ## Tecnologie utilizzate
 
 ### Vite
