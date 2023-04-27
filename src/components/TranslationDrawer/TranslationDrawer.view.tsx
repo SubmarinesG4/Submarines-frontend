@@ -59,7 +59,7 @@ export default function View(props: TranslationDrawerProps) {
       <TextField
         id="outlined-read-only-input"
         label="Key"
-        defaultValue={props.translationKey}
+        value={props.translationKey}
         InputProps={{
           readOnly: true,
         }}
