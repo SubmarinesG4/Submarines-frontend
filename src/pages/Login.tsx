@@ -22,40 +22,32 @@ export default function Login() {
 
 	function formSubmitHandler(data: FormValues) {
 		setAuth("test");
+		/* gestione dell'accesso */
 	}
 
 	return (
-		<Box
-			sx={{
-				display: "flex",
-				justifyContent: "center",
-				alignItems: "center",
-				width: "100vw",
-				minHeight: "100vh",
-				backgroundColor: "#f5f5f5",
-				flexDirection: "column",
-			}}
-		>
-			<Card sx={{ maxWidth: "350px", minWidth: "300px", mt: 2 }}>
+		<Box className="formBox">
+			<Card className="cardFormBox">
+				<img src="public\login.png" className="imgHeading" alt="accesso"/>
 				<CardContent>
 					<form onSubmit={handleSubmit(formSubmitHandler)}>
 						<Box>
-							<Box sx={{ mb: 1 }}>
+							<Box className="headingForm">Log in</Box>
+							<Box className="formField">
 								<FormControl fullWidth>
 									<InputLabel variant="filled" sx={{ color: "#666666" }}>
 										email
 									</InputLabel>
 									<FilledInput
-										fullWidth
-										type="text"
 										id="email"
+										fullWidth
+										type="email"
 										error={!!errors.email}
 										{...register("email", { required: true })}
 									/>
 								</FormControl>
 							</Box>
-							{/* password */}
-							<Box sx={{ mb: 3 }}>
+							<Box className="formField">
 								<FormControl fullWidth variant="outlined">
 									<InputLabel variant="filled">password</InputLabel>
 									<FilledInput
@@ -63,7 +55,7 @@ export default function Login() {
 										fullWidth
 										type="password"
 										error={!!errors.password}
-										{...register("password", { required: true })}
+										{...register("password", { required: true, minLength: 4, maxLength: 20 })}
 									/>
 									{errors.password && <label className="error-text">{errors.password.message}</label>}
 								</FormControl>
@@ -75,7 +67,7 @@ export default function Login() {
 									color="primary"
 									onClick={handleSubmit(formSubmitHandler)}
 								>
-									Submit
+									Accedi
 								</Button>
 							</Box>
 						</Box>
