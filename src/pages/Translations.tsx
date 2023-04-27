@@ -22,7 +22,6 @@ export default function Translations() {
     (translationKey: string) => 
     (event: any) => {
         setTranslationKey(translationKey);
-        console.log(translationKey);
         setDrawerOpenState(true);
     }
 
