@@ -7,6 +7,8 @@ import TextField from '@mui/material/TextField';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
+import { useTranslationDrawer } from '.';
+import { TranslationDrawerProps } from './TranslationDrawer.types';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -41,22 +43,13 @@ function a11yProps(index: number) {
   };
 }
 
-export default function TranslationDrawer() {
-  const [state, setState] = React.useState(false);
+export default function View(props: TranslationDrawerProps) {
   const [value, setValue] = React.useState(0);
+  const data = useTranslationDrawer({ translationKey: props.translationKey });
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
-
-  const toggleDrawer =
-    (open: boolean) =>
-    (event: React.KeyboardEvent | React.MouseEvent) => {
-      if (event.type === 'keydown') {
-        return;
-      }
-      setState(open);
-    };
 
   const list = () => (
     <Box
@@ -66,7 +59,7 @@ export default function TranslationDrawer() {
       <TextField
         id="outlined-read-only-input"
         label="Key"
-        defaultValue="a85ghfv3-35v9i34g-g4598bh"
+        defaultValue={props.translationKey}
         InputProps={{
           readOnly: true,
         }}
@@ -111,8 +104,8 @@ export default function TranslationDrawer() {
         justifyContent="flex-end"
         alignItems="flex-end"
       >
-        <Button variant='outlined' sx={{ marginX: '0.5em' }} onClick={toggleDrawer(false)}>Chiudi</Button>
-        <Button variant='contained' sx={{ marginX: '0.5em' }} onClick={toggleDrawer(false)}>Salva</Button>
+        <Button variant='outlined' sx={{ marginX: '0.5em' }} onClick={props.toggleDrawer(false)}>Chiudi</Button>
+        <Button variant='contained' sx={{ marginX: '0.5em' }} onClick={props.toggleDrawer(false)}>Salva</Button>
       </Box>
       
     </Box>
@@ -121,10 +114,9 @@ export default function TranslationDrawer() {
   return (
     <div>
       <React.Fragment key={'top'}>
-        <Button onClick={toggleDrawer(true)}>TOP</Button>
         <Drawer
         anchor={'top'}
-        open={state}
+        open={props.open}
         >
         {list()}
         </Drawer>

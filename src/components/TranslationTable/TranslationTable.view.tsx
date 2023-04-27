@@ -7,8 +7,10 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import { Button } from '@mui/material';
+import { Button, IconButton } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
+import { Translation } from '@/types/Translation';
+import { TranslationTableProps } from './TranslationTable.types';
 
 interface Column {
   id: 'key' | 'translation' | 'actions';
@@ -23,41 +25,11 @@ const columns: readonly Column[] = [
   { id: 'actions', label: 'Azioni', minWidth: 50, align: 'right' },
 ];
 
-interface Data {
-  key: string;
-  translation: string,
-  actions: React.ReactElement,
-}
-
-function createData(
-  key: string,
-  translation: string,
-  actions: React.ReactElement,
-): Data {
-  return { key, translation, actions };
-}
-
-const rows = [
-  createData('India', 'IN', <div><Button><Edit /></Button><Button><Delete /></Button></div>),
-  createData('China', 'CN', <div><Button><Edit /></Button><Button><Delete /></Button></div>),
-  createData('Italy', 'IT', <div><Button><Edit /></Button><Button><Delete /></Button></div>),
-  createData('United States', 'US', <div><Button><Edit /></Button><Button><Delete /></Button></div>),
-  createData('Canada', 'CA', <div><Button><Edit /></Button><Button><Delete /></Button></div>),
-  createData('Australia', 'AU', <div><Button><Edit /></Button><Button><Delete /></Button></div>),
-  createData('Germany', 'DE', <div><Button><Edit /></Button><Button><Delete /></Button></div>),
-  createData('Ireland', 'IE', <div><Button><Edit /></Button><Button><Delete /></Button></div>),
-  createData('Mexico', 'MX', <div><Button><Edit /></Button><Button><Delete /></Button></div>),
-  createData('Japan', 'JP', <div><Button><Edit /></Button><Button><Delete /></Button></div>),
-  createData('France', 'FR', <div><Button><Edit /></Button><Button><Delete /></Button></div>),
-  createData('United Kingdom', 'GB', <div><Button><Edit /></Button><Button><Delete /></Button></div>),
-  createData('Russia', 'RU', <div><Button><Edit /></Button><Button><Delete /></Button></div>),
-  createData('Nigeria', 'NG', <div><Button><Edit /></Button><Button><Delete /></Button></div>),
-  createData('Brazil', 'BR', <div><Button><Edit /></Button><Button><Delete /></Button></div>),
-];
-
-export default function TranslationTable() {
+export default function View(props: TranslationTableProps) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+
+  const rows: Translation[] = props.items;
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -90,18 +62,21 @@ export default function TranslationTable() {
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row) => {
                 return (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={row.key}>
-                    {columns.map((column) => {
-                      const value = row[column.id];
-                      return (
-                        <TableCell key={column.id} align={column.align}>
-                          { value }
-                        </TableCell>
-                      );
-                    })}
+                  <TableRow hover role="checkbox" tabIndex={-1} key={row.translationKey}>
+                    <TableCell key={'key'} align={columns[0].align}>
+                      { row.translationKey }
+                    </TableCell>
+                    <TableCell key={'translation'} align={columns[1].align}>
+                      { row.defaultLanguageContent }
+                    </TableCell>
+                    <TableCell key={'actions'} align={columns[2].align}>
+                      <IconButton sx={{ marginRight: '0.2em' }} onClick={props.changeTranslationKey(row.translationKey)}><Edit /></IconButton>
+                      <IconButton onClick={() => {}}><Delete /></IconButton>
+                    </TableCell>
                   </TableRow>
                 );
-              })}
+              })
+            }
           </TableBody>
         </Table>
       </TableContainer>
