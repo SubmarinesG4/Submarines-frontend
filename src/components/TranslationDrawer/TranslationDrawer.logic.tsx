@@ -1,7 +1,9 @@
+import { Translation } from "@/types/Translation";
 import { UseTranslationDrawerOptions, UseTranslationDrawerReturn } from "./TranslationDrawer.types";
 
 function useLogic(options: UseTranslationDrawerOptions): UseTranslationDrawerReturn {
-    const { translationKey } = options;
+    const { translationKey, items } = options;
+    const translation: Translation = items.filter(item => item.translationKey === translationKey)[0];
 
     function handleSave() {
         // TODO: implement
@@ -9,6 +11,7 @@ function useLogic(options: UseTranslationDrawerOptions): UseTranslationDrawerRet
 
     return {
         handleSave,
+        translation
     };
 }
 

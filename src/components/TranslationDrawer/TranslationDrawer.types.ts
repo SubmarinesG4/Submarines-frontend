@@ -3,10 +3,12 @@ import React from "react"
 
 export type UseTranslationDrawerOptions = {
     translationKey: string
+    items: Translation[]
 }
 
 export type UseTranslationDrawerReturn = {
     handleSave: () => void
+    translation: Translation
 }
 
 export type UseTranslationDrawer = (options: UseTranslationDrawerOptions) => UseTranslationDrawerReturn

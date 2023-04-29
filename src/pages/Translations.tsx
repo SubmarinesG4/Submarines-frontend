@@ -67,12 +67,15 @@ export default function Translations() {
                 items={getTranslations(translationKey)} 
                 changeTranslationKey={changeTranslationKey} 
             />
-            <TranslationDrawer 
-                open={drawerOpenState} 
-                toggleDrawer={toggleDrawer} 
-                items={getTranslations(translationKey)} 
-                translationKey={translationKey}
-            />
+            {
+                translationKey !== "" &&
+                <TranslationDrawer
+                    open={drawerOpenState}
+                    toggleDrawer={toggleDrawer}
+                    items={getTranslations(translationKey)}
+                    translationKey={translationKey}
+                />
+            }
         </div>
     );
 }

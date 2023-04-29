@@ -45,7 +45,7 @@ function a11yProps(index: number) {
 
 export default function View(props: TranslationDrawerProps) {
   const [value, setValue] = React.useState(0);
-  const data = useTranslationDrawer({ translationKey: props.translationKey });
+  const data = useTranslationDrawer({ translationKey: props.translationKey, items: props.items });
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -67,38 +67,31 @@ export default function View(props: TranslationDrawerProps) {
       />
       <Box sx={{ borderBottom: 1, borderColor: 'divider', paddingTop: '1em' }}>
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-          <Tab label="LINGUA 1" {...a11yProps(0)} />
-          <Tab label="LINGUA 2" {...a11yProps(1)} />
-          <Tab label="LINGUA 3" {...a11yProps(2)} />
+          {
+            data.translation.languages.map((language, index) => {
+              return (
+                <Tab label={language.language} {...a11yProps(index)} />
+              )
+            })
+          }
         </Tabs>
       </Box>
-      <TabPanel value={value} index={0}>
-        <TextField
-          id="textarea-lang1"
-          label=""
-          multiline
-          rows={4}
-          defaultValue="Valore di test lingua 1"
-        />
-      </TabPanel>
-      <TabPanel value={value} index={1}>
-        <TextField
-          id="textarea-lang2"
-          label=""
-          multiline
-          rows={4}
-          defaultValue="Valore di test lingua 2"
-        />
-      </TabPanel>
-      <TabPanel value={value} index={2}>
-        <TextField
-          id="textarea-lang3"
-          label=""
-          multiline
-          rows={4}
-          defaultValue="Valore di test lingua 3"
-        />
-      </TabPanel>
+      {
+        data.translation.languages.map((language, index) => {
+          return (
+            <TabPanel value={value} index={index}>
+              <TextField
+                id="textarea-lang1"
+                label=""
+                multiline
+                rows={4}
+                defaultValue={'Lingua ' + language.language}
+                value={language.content}
+              />
+            </TabPanel>
+          )
+        })
+      }
       <Box 
         display="flex"
         justifyContent="flex-end"
