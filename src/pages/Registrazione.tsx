@@ -19,11 +19,19 @@ export default function Registrazione() {
 		formState: { errors, isValid }
 	} = useForm<FormValues>({ mode: "all" });
 
+	const [cognome, setCognome] = useState("");
+	const [nome, setNome] = useState("");
+	const [password, setPassword] = useState("");
+	const [confirmPassword, setConfirmPassword] = useState("");
+
 	const [open, setOpen] = useState<boolean>(false);
 	const [message, setMessage] = useState<string>("");
 
 	function formSubmitHandler(data: FormValues) {
-		/* gestione della registrazione */
+		console.log(cognome);
+		console.log(nome);
+		console.log(password);
+		console.log(confirmPassword);
 	}
 
 	return (
@@ -43,6 +51,7 @@ export default function Registrazione() {
 										id="cognome"
 										error={!!errors.cognome}
 										{...register("cognome", { required: "Campo richiesto" })}
+										onChange={(event) => setCognome(event.target.value)}
 									/>
 	  								{errors.cognome && <label className="error-text">{errors.cognome.message}</label>}
 								</FormControl>
@@ -56,6 +65,7 @@ export default function Registrazione() {
 										type="text"
 										error={!!errors.nome}
 										{...register("nome", { required: "Campo richiesto" })}
+										onChange={(event) => setNome(event.target.value)}
 									/>
 									{errors.nome && <label className="error-text">{errors.nome.message}</label>}
 								</FormControl>
@@ -69,7 +79,7 @@ export default function Registrazione() {
 										type="password"
 										error={!!errors.password}
 										{...register("password", { 
-											required: "Password vuota", 
+											required: "Campo richiesto", 
 											pattern: {
 												value:
 												  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/u,
@@ -77,6 +87,7 @@ export default function Registrazione() {
 												  "La password deve essere lunga almeno 8 caratteri e contenere almeno una lettera maiuscola, una minuscola, un numero e un simbolo tra @$!%*?&.",
 											  },
 										})}
+										onChange={(event) => setPassword(event.target.value)}
 									/>
 									{errors.password && <label className="error-text">{errors.password.message}</label>}
 								</FormControl>
@@ -93,8 +104,9 @@ export default function Registrazione() {
 											required: "Conferma password necessaria",
 											validate: (value) =>
                   							value === getValues("password") ||
-                  							"Password diverse.", 
+                  							"Password diverse", 
 										})}
+										onChange={(event) => setConfirmPassword(event.target.value)}
 									/>
 									{errors.confirmPassword && <label className="error-text">{errors.confirmPassword.message}</label>}
 								</FormControl>

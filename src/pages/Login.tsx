@@ -2,6 +2,8 @@ import { useAuthStore } from "@/stores";
 import { Alert, Box, Button, Card, CardContent, FilledInput, FormControl, InputLabel, Snackbar } from "@mui/material";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import UserPool from "@/UserPool";
+import { AuthenticationDetails, CognitoUser } from "amazon-cognito-identity-js";
 
 interface FormValues {
 	email: string;
@@ -17,12 +19,16 @@ export default function Login() {
 
 	const setAuth = useAuthStore((state) => state.setAuth);
 
+	const [email, setEmail] = useState("");
+	const [password, setPassword] = useState("");
+ 
 	const [open, setOpen] = useState<boolean>(false);
 	const [message, setMessage] = useState<string>("");
 
 	function formSubmitHandler(data: FormValues) {
-		setAuth("test");
-		/* gestione dell'accesso */
+		console.log(email);
+		console.log(password);
+		setAuth(email);
 	}
 
 	return (
@@ -32,7 +38,7 @@ export default function Login() {
 				<CardContent>
 					<form onSubmit={handleSubmit(formSubmitHandler)}>
 						<Box>
-							<Box className="headingForm">Log in</Box>
+							<Box className="headingForm">Accesso</Box>
 							<Box className="formField">
 								<FormControl fullWidth>
 									<InputLabel variant="filled" sx={{ color: "#666666" }}>
@@ -43,8 +49,16 @@ export default function Login() {
 										fullWidth
 										type="email"
 										error={!!errors.email}
-										{...register("email", { required: true })}
+										{...register("email", { 
+											required: "Campo obbligatorio",
+											pattern: {
+												value: /\S+@\S+\.\S+/,
+												message: "Formato errato della email",
+											},
+										})}
+										onChange={(event) => setEmail(event.target.value)}
 									/>
+									{errors.email && <label className="error-text">{errors.email.message}</label>}
 								</FormControl>
 							</Box>
 							<Box className="formField">
@@ -55,13 +69,17 @@ export default function Login() {
 										fullWidth
 										type="password"
 										error={!!errors.password}
-										{...register("password", { required: true, minLength: 4, maxLength: 20 })}
+										{...register("password", { 
+											required: "Campo obbligatorio", 
+											minLength: 8 })}
+										onChange={(event) => setPassword(event.target.value)}
 									/>
 									{errors.password && <label className="error-text">{errors.password.message}</label>}
 								</FormControl>
 							</Box>
 							<Box>
 								<Button
+									className="formButton"
 									disabled={!isValid}
 									variant="outlined"
 									color="primary"

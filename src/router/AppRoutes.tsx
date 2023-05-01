@@ -11,8 +11,9 @@ export default function AppRoutes() {
 		<BrowserRouter>
 			<Routes>
 				<Route path="/" element={auth ? <Home /> : <Navigate to="/login" replace />} />
-				<Route path="/login" element={auth ? <Navigate to="/" replace /> : <Login />} />
-				<Route path="/registrazione" element={auth ? <Navigate to="/" replace /> : <Registrazione />} />
+				{/* <Route path="/login" element={auth ? <Navigate to="/" replace /> : <Login />} />*/}
+				<Route path="/login" element={auth ? <Login /> : <Login />} />
+				<Route path="/registrazione" element={<Registrazione />} />
 			</Routes>
 		</BrowserRouter>
 	);

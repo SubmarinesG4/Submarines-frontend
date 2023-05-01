@@ -56,3 +56,8 @@ REGISTRAZIONE, LOGIN
   	margin-right: auto;
 	width: 20%;
 }
+
+.error-text {
+	font-size:small;
+	color: red;
+}
