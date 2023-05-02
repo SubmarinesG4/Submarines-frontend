@@ -61,7 +61,6 @@ export default function Translations() {
     return (
         <div>
             <NavBar />
-            <Button onClick={toggleDrawer(true)}>Open Drawer</Button>
             <TranslationTable 
                 toggleDrawer={toggleDrawer} 
                 items={getTranslations(translationKey)} 
