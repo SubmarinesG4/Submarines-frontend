@@ -11,11 +11,12 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
+import { NavBarProps } from './NavBar.types';
 
 const pages = ['Tenants'];
 const settings = ['Account', 'Logout'];
 
-function NavBar() {
+export default function View(props: NavBarProps) {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
@@ -156,4 +157,3 @@ function NavBar() {
     </AppBar>
   );
 }
-export default NavBar;

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import NavBar from "@/components/NavBar/NavBar";
+import NavBar from "@/components/NavBar";
 import TranslationDrawer from "@/components/TranslationDrawer";
 import TranslationTable from "@/components/TranslationTable";
 import { Button } from "@mui/material";

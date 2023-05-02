@@ -1,13 +1,11 @@
-import NavBar from "@/components/NavBar/NavBar";
+import NavBar from "@/components/NavBar";
 import TranslationDrawer from "@/components/TranslationDrawer";
-import TranslationList from "@/components/TranslationList";
-import TranslationTable from "@/components/TranslationTable/TranslationTable.view";
+import TranslationTable from "@/components/TranslationTable";
 
 export default function Home() {
 	return (
 		<div>
 			<NavBar />
-			<TranslationTable />
 		</div>
 	);
 }
