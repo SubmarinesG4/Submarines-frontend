@@ -1,7 +1,7 @@
 import { UseNavBarOptions, UseNavBarReturn } from "./NavBar.types";
 
 function useLogic(options: UseNavBarOptions): UseNavBarReturn {
-    return ('');
+  return "";
 }
 
 export default useLogic;
