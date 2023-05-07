@@ -1,20 +1,31 @@
-import { useAuthStore } from "@/stores";
+import { useAuth } from "@/stores/AuthProvider";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import Home from "../pages/Home";
 import Login from "../pages/Login";
-import Registrazione from "../pages/Registrazione"
+import Registration from "../pages/Registration"
 
 export default function AppRoutes() {
-	const auth = useAuthStore((state) => state.auth);
+	const auth = useAuth();
 
 	return (
 		<BrowserRouter>
 			<Routes>
-				<Route path="/" element={auth ? <Home /> : <Navigate to="/login" replace />} />
-				{/* <Route path="/login" element={auth ? <Navigate to="/" replace /> : <Login />} />*/}
-				<Route path="/login" element={auth ? <Login /> : <Login />} />
-				<Route path="/registrazione" element={<Registrazione />} />
-			</Routes>
+                <Route path='/' element={
+                    auth?.auth ?
+                        <Navigate to="/home" replace /> :
+                        <Navigate to="/login" replace />
+                } />
+                <Route path="/login" element={
+                    auth?.auth ?
+                        <Navigate to="/home" replace /> :
+                        <Login />
+                } />
+                <Route path="/home" element={
+                    auth?.auth ?
+                        <Home /> :
+                        <Navigate to="/login" replace />
+                } />
+            </Routes>
 		</BrowserRouter>
 	);
 }

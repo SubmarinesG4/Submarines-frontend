@@ -1,9 +1,9 @@
-import { useAuthStore } from "@/stores";
 import { Alert, Box, Button, Card, CardContent, FilledInput, FormControl, InputLabel, Snackbar } from "@mui/material";
+import { ISignUpResult } from "amazon-cognito-identity-js";
+import { Auth } from "aws-amplify";
+import { useAuth } from "@/stores/AuthProvider";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import UserPool from "@/UserPool";
-import { AuthenticationDetails, CognitoUser } from "amazon-cognito-identity-js";
 
 interface FormValues {
 	email: string;
@@ -11,24 +11,20 @@ interface FormValues {
 }
 
 export default function Login() {
-	const {
-		register,
-		handleSubmit,
-		formState: { errors, isValid },
-	} = useForm<FormValues>({ mode: "all" });
-
-	const setAuth = useAuthStore((state) => state.setAuth);
-
-	const [email, setEmail] = useState("");
-	const [password, setPassword] = useState("");
- 
+	const { register, handleSubmit, formState: { errors, isValid } } = useForm<FormValues>({ mode: "all" });
 	const [open, setOpen] = useState<boolean>(false);
 	const [message, setMessage] = useState<string>("");
+	const auth = useAuth();
 
 	function formSubmitHandler(data: FormValues) {
-		console.log(email);
-		console.log(password);
-		setAuth(email);
+		Auth.signIn(data.email.trim(), data.password).then((response: ISignUpResult) => {
+			localStorage.setItem('webappUser', JSON.stringify(response.user));
+			auth?.setAuth(true);
+		}).catch((err) => {
+			console.error("ERROR: ", err);
+			setOpen(true);
+			setMessage(err.message);
+		});
 	}
 
 	return (
@@ -56,7 +52,6 @@ export default function Login() {
 												message: "Formato errato della email",
 											},
 										})}
-										onChange={(event) => setEmail(event.target.value)}
 									/>
 									{errors.email && <label className="error-text">{errors.email.message}</label>}
 								</FormControl>
@@ -72,7 +67,6 @@ export default function Login() {
 										{...register("password", { 
 											required: "Campo obbligatorio", 
 											minLength: 8 })}
-										onChange={(event) => setPassword(event.target.value)}
 									/>
 									{errors.password && <label className="error-text">{errors.password.message}</label>}
 								</FormControl>
@@ -92,23 +86,11 @@ export default function Login() {
 					</form>
 				</CardContent>
 			</Card>
-			<Snackbar
-				open={open}
-				autoHideDuration={6000}
-				onClose={() => {
-					setOpen(false);
-				}}
-			>
-				<Alert
-					onClose={() => {
-						setOpen(false);
-					}}
-					severity="error"
-					sx={{ width: "100%" }}
-				>
-					{message}
-				</Alert>
-			</Snackbar>
+			<Snackbar open={open} autoHideDuration={6000} onClose={() => { setOpen(false) }}>
+                <Alert onClose={() => { setOpen(false) }} severity="error" sx={{ width: '100%' }}>
+                    {message}
+                </Alert>
+            </Snackbar>
 		</Box>
 	);
 }
