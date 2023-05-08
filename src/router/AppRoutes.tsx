@@ -4,6 +4,7 @@ import Home from "../pages/Home";
 import Login from "../pages/Login";
 import Registration from "../pages/Registration"
 import ResetPassword from "@/pages/ResetPassword";
+import Translations from "@/pages/Translations";
 
 export default function AppRoutes() {
 	const auth = useAuth();

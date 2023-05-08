@@ -3,12 +3,15 @@ import { Translation } from "@/types/Translation";
 import { useQuery } from "react-query";
 
 type GetAllTranslationsResponse = {
-	items: Translation[]
+  items: Translation[];
+};
+
+async function getAllTranslations(tenant: string) {
+  const response = await getData<GetAllTranslationsResponse>(
+    `/${tenant}/translation`
+  );
+  return response.data;
 }
 
-async function getAllTranslations() {
-	const response = await getData<GetAllTranslationsResponse>(`/translation/1/`)
-	return response.data
-}
-
-export const useTranslationGetAllQuery = () => useQuery(['translations'], () => getAllTranslations())
+export const useTranslationGetAllQuery = (tenant: string) =>
+  useQuery(["translations", tenant], () => getAllTranslations(tenant));
