@@ -2,14 +2,9 @@ import Auth from "@aws-amplify/auth";
 import axios from "axios";
 
 async function getDefaulHeaders() {
-	/* 	const user = await Auth.currentAuthenticatedUser();
-		const token = user.signInUserSession?.idToken?.jwtToken; */
-	const token = localStorage.getItem("auth")
-	if (token) {
-		return { headers: { 'Authorization': `Bearer ${token}` } }
-	} else {
-		return {}
-	}
+	const user = await Auth.currentAuthenticatedUser();
+    const token = user.signInUserSession?.idToken?.jwtToken;
+    return {headers: {'Authorization': `Bearer ${token}`}}
 }
 
 const axiosInstance = axios.create({
