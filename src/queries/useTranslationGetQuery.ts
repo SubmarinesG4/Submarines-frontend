@@ -2,9 +2,10 @@ import { getData } from "@/globals/axios";
 import { Translation } from "@/types/Translation";
 import { useQuery } from "react-query";
 
-async function getTranslation(key: string) {
-	const response = await getData<Translation>(`/translation/1/${key}`)
-	return response.data
+async function getTranslation(tenant: string, key: string) {
+  const response = await getData<Translation>(`/${tenant}/translation/${key}`);
+  return response.data;
 }
 
-export const useTranslationGetQuery = (key: string) => useQuery(['translation', key], () => getTranslation(key))
+export const useTranslationGetQuery = (tenant: string, key: string) =>
+  useQuery(["translation", { tenant, key }], () => getTranslation(tenant, key));
