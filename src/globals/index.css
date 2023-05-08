@@ -61,3 +61,11 @@ REGISTRAZIONE, LOGIN
 	font-size:small;
 	color: red;
 }
+
+.resetPassword {
+	padding-top: 1rem;
+}
+
+.linkResetPswd {
+	text-decoration: none;
+}

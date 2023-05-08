@@ -4,6 +4,7 @@ import { Auth } from "aws-amplify";
 import { useAuth } from "@/stores/AuthProvider";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
 
 interface FormValues {
 	email: string;
@@ -12,8 +13,10 @@ interface FormValues {
 
 export default function Login() {
 	const { register, handleSubmit, formState: { errors, isValid } } = useForm<FormValues>({ mode: "all" });
+
 	const [open, setOpen] = useState<boolean>(false);
 	const [message, setMessage] = useState<string>("");
+
 	const auth = useAuth();
 
 	function formSubmitHandler(data: FormValues) {
@@ -73,7 +76,6 @@ export default function Login() {
 							</Box>
 							<Box>
 								<Button
-									className="formButton"
 									disabled={!isValid}
 									variant="outlined"
 									color="primary"
@@ -81,6 +83,9 @@ export default function Login() {
 								>
 									Accedi
 								</Button>
+							</Box>
+							<Box className="resetPassword">
+								<Link to={"/resetPassword"} className="linkResetPswd">Password dimenticata?</Link>			
 							</Box>
 						</Box>
 					</form>
