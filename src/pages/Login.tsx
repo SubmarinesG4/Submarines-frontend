@@ -1,10 +1,11 @@
 import { Alert, Box, Button, Card, CardContent, FilledInput, FormControl, InputLabel, Snackbar } from "@mui/material";
-import { ISignUpResult } from "amazon-cognito-identity-js";
 import { Auth } from "aws-amplify";
 import { useAuth } from "@/stores/AuthProvider";
+import { ISignUpResult } from "amazon-cognito-identity-js";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
+import NavBar from "@/components/NavBar";
 
 interface FormValues {
 	email: string;
@@ -19,15 +20,29 @@ export default function Login() {
 
 	const auth = useAuth();
 
-	function formSubmitHandler(data: FormValues) {
-		Auth.signIn(data.email.trim(), data.password).then((response: ISignUpResult) => {
-			localStorage.setItem('webappUser', JSON.stringify(response.user));
+	async function formSubmitHandler(data: FormValues) {
+		try {
+			const user = await Auth.signIn(data.email.trim(), data.password);
+			localStorage.setItem('currentUser', user.username);
 			auth?.setAuth(true);
-		}).catch((err) => {
+
+			// to fix Auth.currentAuthenticatedUser() bug
+			if (user.challengeName === 'NEW_PASSWORD_REQUIRED') {
+                Auth.completeNewPassword(
+                  user,            
+                  data.password,
+                ).then(user => {
+                    console.log(user);
+                }).catch(e => {
+                  console.log(e);
+                });
+			}
+			
+		} catch(err: any) {
 			console.error("ERROR: ", err);
 			setOpen(true);
 			setMessage(err.message);
-		});
+		}
 	}
 
 	return (

@@ -7,7 +7,7 @@ interface AuthProviderProps {
 
 type AuthContextType = {
     auth: boolean,
-    setAuth: Dispatch<SetStateAction<boolean>>
+    setAuth: Dispatch<SetStateAction<boolean>>,
 };
 
 const AuthContext = createContext<AuthContextType | null>(null);

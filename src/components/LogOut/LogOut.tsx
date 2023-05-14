@@ -8,13 +8,13 @@ export default function logOut(){
         try {
             await Auth.signOut();
             auth?.setAuth(false);
-            localStorage.removeItem("webappUser");
+            localStorage.removeItem("currentUser");
         } catch (error) {
             console.log('error signing out: ', error);
         }
     }
     
     return (
-        <button onClick={signOut}>Logout</button>
+        <button onClick={() => {signOut()}}>Logout</button>
     );
 }
