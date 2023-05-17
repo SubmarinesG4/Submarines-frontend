@@ -16,6 +16,7 @@ Amplify.configure({
 
 function App() {
 	const user = localStorage.getItem('currentUser');
+	// console.log(Auth.currentUserInfo()); // to see user attributes
 
 	return (
 		<ThemeProvider theme={defaultTheme}>

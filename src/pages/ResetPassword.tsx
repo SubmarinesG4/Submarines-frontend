@@ -1,5 +1,4 @@
 import { Alert, Box, Button, Card, CardContent, FilledInput, FormControl, InputLabel, Snackbar } from "@mui/material";
-import { ISignUpResult, CognitoUser, CognitoUserPool } from "amazon-cognito-identity-js";
 import { Auth } from "aws-amplify";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -20,7 +19,7 @@ export default function ResetPassword() {
 		formState: { errors, isValid }
 	} = useForm<FormValues>({ mode: "all" });
 
-    const [stage, setStage] = useState(1); // 1 = email stage, 2 = code stage, 3 = login redirect
+    const [stage, setStage] = useState(1); // 1 = sending code stage, 2 = reset stage, 3 = login redirect
     const [email, setEmail] = useState("");
     
     const [code, setCode] = useState("");
@@ -30,45 +29,27 @@ export default function ResetPassword() {
 	const [open, setOpen] = useState<boolean>(false);
 	const [message, setMessage] = useState<string>("");
 
-    const getUser = () => {
-        return new CognitoUser({
-            Username: email.toLowerCase(),
-            Pool: new CognitoUserPool({
-                UserPoolId: "eu-central-1_57mvV5N7n",
-                ClientId: "snftpb6f6bsdaphl7rv34lnl"
-            })
-        })
-    }
-
-    const sendCode = () => {
-        getUser().forgotPassword({
-            onSuccess: data => {
-                console.log("onSuccess:", data);
-            },
-            onFailure: err => {
-                console.log("onFailure:", err);
-            },
-            inputVerificationCode: data => {
-                console.log("Input code:", data);
+	function formSubmitHandler() {
+        if(stage === 1) {
+            try {
+                Auth.forgotPassword(email);
                 setStage(2);
+            } catch(err: any) {
+                console.error("ERROR: ", err);
+                setOpen(true);
+                setMessage(err.message);
             }
-        });
+        } else if(stage === 2) {
+            try {
+                Auth.forgotPasswordSubmit(email, code, newPassword);
+                setStage(3);
+            } catch(err: any) {
+                console.log("ERROR: ", err);
+                setOpen(true);
+                setMessage(err.message);
+            }
+        }
     }
-
-	function formSubmitHandler(data: FormValues) {
-		// Send confirmation code to user's email
-        /* Auth.forgotPassword(data.email).then((data) => console.log(data))
-        .catch((err) => {
-            console.error("ERROR: ", err);
-			setOpen(true);
-			setMessage(err.message);
-        }); */
-
-        // Collect confirmation code and new password, then
-        /* Auth.forgotPasswordSubmit(username, code, new_password)
-        .then((data) => console.log(data))
-        .catch((err) => console.log(err)); */
-	}
 
 	return (
 		<Box className="formBox">
@@ -107,9 +88,7 @@ export default function ResetPassword() {
                                         disabled={!isValid}
                                         variant="outlined"
                                         color="primary"
-                                        onClick={() => {
-                                            setStage(2);
-                                        }}
+                                        onClick={handleSubmit(formSubmitHandler)}
                                     >
                                         Invia codice di recupero
                                     </Button>
@@ -187,9 +166,7 @@ export default function ResetPassword() {
                                         disabled={!isValid}
                                         variant="outlined"
                                         color="primary"
-                                        onClick={() => {
-                                            setStage(3);
-                                        }}
+                                        onClick={handleSubmit(formSubmitHandler)}
                                     >
                                         Cambia password
                                     </Button>

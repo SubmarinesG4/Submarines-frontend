@@ -26,15 +26,11 @@ export default function Login() {
 			localStorage.setItem('currentUser', user.username);
 			auth?.setAuth(true);
 
-			// to fix Auth.currentAuthenticatedUser() bug
+			// to fix Auth.currentAuthenticatedUser() bug (just for users created manually with pool)
 			if (user.challengeName === 'NEW_PASSWORD_REQUIRED') {
-                Auth.completeNewPassword(
-                  user,            
-                  data.password,
-                ).then(user => {
-                    console.log(user);
-                }).catch(e => {
-                  console.log(e);
+                Auth.completeNewPassword(user, data.password,).then(user => {console.log(user);})
+				.catch(e => {
+                  	console.log(e);
                 });
 			}
 			
