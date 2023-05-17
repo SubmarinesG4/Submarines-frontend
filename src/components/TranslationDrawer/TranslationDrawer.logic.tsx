@@ -1,18 +1,23 @@
 import { Translation } from "@/types/Translation";
-import { UseTranslationDrawerOptions, UseTranslationDrawerReturn } from "./TranslationDrawer.types";
+import {
+  UseTranslationDrawerOptions,
+  UseTranslationDrawerReturn,
+} from "./TranslationDrawer.types";
 
-function useLogic(options: UseTranslationDrawerOptions): UseTranslationDrawerReturn {
-    const { translationKey, items } = options;
-    const translation: Translation = items.filter(item => item.translationKey === translationKey)[0];
+function useLogic(
+  options: UseTranslationDrawerOptions
+): UseTranslationDrawerReturn {
+  const { translationKey, translation } = options;
 
-    function handleSave() {
-        // TODO: implement
-    }
+  function handleSave(obj: Translation) {
+    console.log(translation);
+    // TODO: save translation to DB
+  }
 
-    return {
-        handleSave,
-        translation
-    };
+  return {
+    handleSave,
+    translation,
+  };
 }
 
 export default useLogic;

@@ -12,6 +12,8 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import { NavBarProps } from "./NavBar.types";
+import useLogic from "./NavBar.logic";
+import { useNavigate } from "react-router-dom";
 
 const pages = ["Tenants"];
 const settings = ["Account", "Logout"];
@@ -39,30 +41,15 @@ export default function View(props: NavBarProps) {
     setAnchorElUser(null);
   };
 
+  const data = useLogic(props);
+  const navigate = useNavigate();
+
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <Typography
-            variant="h6"
-            noWrap
-            component="a"
-            href="/"
-            sx={{
-              mr: 2,
-              display: { xs: "none", md: "flex" },
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
-              color: "inherit",
-              textDecoration: "none",
-            }}
-          >
-            SUBMARINES
-          </Typography>
-
-          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
-            <IconButton
+          <Box sx={{ flexGrow: 1 }}>
+            <IconButton // PICCOLO
               size="large"
               aria-label="account of current user"
               aria-controls="menu-appbar"
@@ -87,7 +74,7 @@ export default function View(props: NavBarProps) {
               open={Boolean(anchorElNav)}
               onClose={handleCloseNavMenu}
               sx={{
-                display: { xs: "block", md: "none" },
+                display: "block",
               }}
             >
               {pages.map((page) => (
@@ -97,14 +84,13 @@ export default function View(props: NavBarProps) {
               ))}
             </Menu>
           </Box>
-          <Typography
+          <Typography // PICCOLO
             variant="h5"
             noWrap
             component="a"
             href=""
             sx={{
               mr: 2,
-              display: { xs: "flex", md: "none" },
               flexGrow: 1,
               fontFamily: "monospace",
               fontWeight: 700,
@@ -115,18 +101,6 @@ export default function View(props: NavBarProps) {
           >
             SUBMARINES
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: "white", display: "block" }}
-              >
-                {page}
-              </Button>
-            ))}
-          </Box>
-
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -149,11 +123,12 @@ export default function View(props: NavBarProps) {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
+              <MenuItem key="Account" onClick={handleCloseUserMenu}>
+                <Typography textAlign="center">Account</Typography>
+              </MenuItem>
+              <MenuItem key="Logout" onClick={data.signOut}>
+                <Typography textAlign="center">Logout</Typography>
+              </MenuItem>
             </Menu>
           </Box>
         </Toolbar>
