@@ -8,7 +8,6 @@ export default function Home() {
 		<div>
 			<NavBar />
 			<LogOut />
-			<h1>This is {localStorage.getItem('currentUser')}</h1>
 		</div>
 	);
 }
