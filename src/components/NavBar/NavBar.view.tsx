@@ -8,14 +8,12 @@ import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
 import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import { NavBarProps } from "./NavBar.types";
 import useLogic from "./NavBar.logic";
-import { useNavigate } from "react-router-dom";
 
-const pages = ["Tenants"];
+const pages = [{ name: "Tenants", route: "/tenants" }];
 const settings = ["Account", "Logout"];
 
 export default function View(props: NavBarProps) {
@@ -41,8 +39,18 @@ export default function View(props: NavBarProps) {
     setAnchorElUser(null);
   };
 
+  const userRole = localStorage.getItem("currentUserRole");
+
   const data = useLogic(props);
-  const navigate = useNavigate();
+
+  const navigateTo = (path: string, nav: boolean) => (event: any) => {
+    if (nav) {
+      handleCloseNavMenu();
+    } else {
+      handleCloseUserMenu();
+    }
+    data.navigateTo(path);
+  };
 
   return (
     <AppBar position="static">
@@ -56,6 +64,12 @@ export default function View(props: NavBarProps) {
               aria-haspopup="true"
               onClick={handleOpenNavMenu}
               color="inherit"
+              sx={{
+                display:
+                  userRole !== null && userRole === "traduttore"
+                    ? "none"
+                    : "block",
+              }}
             >
               <MenuIcon />
             </IconButton>
@@ -78,8 +92,11 @@ export default function View(props: NavBarProps) {
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
+                <MenuItem
+                  key={page.name}
+                  onClick={navigateTo(page.route, true)}
+                >
+                  <Typography textAlign="center">{page.name}</Typography>
                 </MenuItem>
               ))}
             </Menu>
@@ -123,7 +140,7 @@ export default function View(props: NavBarProps) {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              <MenuItem key="Account" onClick={handleCloseUserMenu}>
+              <MenuItem key="Account" onClick={navigateTo("/account", false)}>
                 <Typography textAlign="center">Account</Typography>
               </MenuItem>
               <MenuItem key="Logout" onClick={data.signOut}>

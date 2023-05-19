@@ -4,6 +4,7 @@ export type UseNavBarOptions = {};
 
 export type UseNavBarReturn = {
   signOut: () => void;
+  navigateTo: (path: string) => void;
 };
 
 export type UseNavBar = (options: UseNavBarOptions) => UseNavBarReturn;
