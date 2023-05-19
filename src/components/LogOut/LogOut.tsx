@@ -9,6 +9,7 @@ export default function logOut(){
             await Auth.signOut();
             auth?.setAuth(false);
             localStorage.removeItem("currentUser");
+            localStorage.removeItem("currentUserRole");
         } catch (error) {
             console.log('error signing out: ', error);
         }

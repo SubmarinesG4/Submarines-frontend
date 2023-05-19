@@ -4,7 +4,8 @@ import axios from "axios";
 export async function getDefaulHeaders() { 
     const user = await Auth.currentAuthenticatedUser();
     const token = user.signInUserSession?.idToken?.jwtToken;
-    return {headers: {'Authorization': `Bearer ${token}`}};
+    const group = user.signInUserSession.accessToken.payload["cognito:groups"];
+    return {headers: {'Authorization': `Bearer ${token}`, 'Group': group}};
 }
 
 export async function getData(url: string) {

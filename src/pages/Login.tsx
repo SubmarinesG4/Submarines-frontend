@@ -32,11 +32,13 @@ export default function Login() {
 	const [message, setMessage] = useState<string>("");
 
 	const auth = useAuth();
-	let user: any;
+	let user: any, userGroup: any;
 
 	async function formSubmitHandler(data: FormValues) {
 		try {
 			user = await Auth.signIn(data.email.trim(), password);
+			userGroup = user.signInUserSession.accessToken.payload["cognito:groups"];
+			console.log(userGroup[0]);
 			if(user.challengeName === 'NEW_PASSWORD_REQUIRED') {
 				setStage(2);
 				if(stage === 3){
@@ -45,10 +47,12 @@ export default function Login() {
 						console.log(e);
 					});
 					localStorage.setItem('currentUser', user.username);
+					localStorage.setItem('currentUserRole', userGroup[0]);
 					auth?.setAuth(true);
 				}
 			} else {
 				localStorage.setItem('currentUser', user.username);
+				localStorage.setItem('currentUserRole', userGroup[0]);
 				auth?.setAuth(true);
 			}
 		} catch(err: any) {
