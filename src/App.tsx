@@ -5,7 +5,6 @@ import AppRoutes from "@/router/AppRoutes";
 import { queryClient } from "@/queries";
 import { Auth, Amplify } from 'aws-amplify';
 import { AuthProvider, useAuth } from "./stores/AuthProvider";
-import { getData, getDefaulHeaders } from "./globals/axios";
 
 Amplify.configure({
 	Auth: {
