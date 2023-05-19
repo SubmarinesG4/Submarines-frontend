@@ -9,7 +9,8 @@ function useLogic(options: UseNavBarOptions): UseNavBarReturn {
     try {
       await Auth.signOut();
       auth?.setAuth(false);
-      localStorage.removeItem("webappUser");
+      localStorage.removeItem("currentUser");
+      localStorage.removeItem("currentUserRole");
     } catch (error) {
       console.log("error signing out: ", error);
     }
