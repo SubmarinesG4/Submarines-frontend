@@ -1,4 +1,5 @@
 import { Translation } from "@/types/Translation";
+import { TranslationSend } from "@/types/TranslationSend";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 type GetAllTranslationsResponse = {
@@ -22,14 +23,26 @@ export const api = createApi({
   }),
   endpoints: (builder) => ({
     getAllTranslations: builder.query<GetAllTranslationsResponse, void>({
-      query: () => `translation/1/`,
+      query: (tenant) => `${tenant}/translation`,
     }),
-    putTranslation: builder.mutation<any, Partial<any>>({
-      query(body) {
+    getTranslation: builder.query<Translation, { tenant: string; key: string }>(
+      {
+        query: ({ tenant, key }) => `${tenant}/translation/${key}`,
+      }
+    ),
+    putTranslation: builder.mutation<
+      any,
+      {
+        tenant: string;
+        translationKey: string;
+        translation: Partial<TranslationSend>;
+      }
+    >({
+      query({ tenant, translationKey, translation }) {
         return {
-          url: `1/translation/${body.id}`,
+          url: `${tenant}/translation/${translationKey}`,
           method: "POST",
-          body,
+          translation,
         };
       },
       // Invalidates all Post-type queries providing the `LIST` id - after all, depending of the sort order,
