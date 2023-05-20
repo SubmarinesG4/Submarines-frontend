@@ -1,13 +1,17 @@
-
 interface Translation {
-	translationKey: string
-	defaultLanguage: string
-	defaultLanguageContent: string
-	languages: { language: string, content: string }[]
-	modifiedBy: string
-	modifiedAt: Date
-	createdAt: Date
-	published: boolean
+  translationKey: string;
+  defaultTranslationLanguage: string;
+  defaultTranslationinLanguage: string;
+  languages: { language: string; content: string }[];
+  modifiedByUser: string;
+  modificationDate: Date;
+  creationDate: Date;
+  published: boolean;
+  versionedTranslations: {
+    modifiedByUser: string;
+    modificationDate: Date;
+    translations: { language: string; content: string }[];
+  }[];
 }
 
 export type { Translation };

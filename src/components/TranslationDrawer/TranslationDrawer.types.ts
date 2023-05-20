@@ -20,6 +20,7 @@ export type TranslationDrawerProps = {
   toggleDrawer: (open: boolean) => any;
   translation: Translation;
   translationKey: string;
+  view: 1 | 2 | 3;
 };
 
 export type TranslationDrawerView = React.FC<TranslationDrawerProps>;

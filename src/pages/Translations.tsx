@@ -10,14 +10,16 @@ export default function Translations() {
   const [translationKey, setTranslationKey] = useState<string>("");
   const [translation, setTranslation] = useState<Translation>({
     translationKey: "",
-    defaultLanguage: "",
-    defaultLanguageContent: "",
+    defaultTranslationLanguage: "",
+    defaultTranslationinLanguage: "",
     languages: [],
-    modifiedBy: "",
-    modifiedAt: new Date(),
-    createdAt: new Date(),
+    modifiedByUser: "",
+    modificationDate: new Date(),
+    creationDate: new Date(),
     published: false,
+    versionedTranslations: [],
   });
+  const [drawerView, setDrawerView] = useState<1 | 2 | 3>(1); // 1 = DrawerList, 2 = HistoryList, 3 = NewTranslationList
 
   const toggleDrawer =
     (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
@@ -37,25 +39,46 @@ export default function Translations() {
     setTranslation(translation);
   };
 
+  const showEdit = (translationKey: string) => (event: any) => {
+    setDrawerView(1);
+    changeTranslationKey(translationKey)(event);
+  };
+
+  const showHistory = (translationKey: string) => (event: any) => {
+    setDrawerView(2);
+    changeTranslationKey(translationKey)(event);
+  };
+
+  const showNew = () => (event: any) => {
+    setDrawerView(3);
+    setDrawerOpenState(true);
+  };
+
   function createData(
     translationKey: string,
-    defaultLanguage: string,
-    defaultLanguageContent: string,
+    defaultTranslationLanguage: string,
+    defaultTranslationinLanguage: string,
     languages: { language: string; content: string }[],
-    modifiedBy: string,
-    modifiedAt: Date,
-    createdAt: Date,
-    published: boolean
+    modifiedByUser: string,
+    modificationDate: Date,
+    creationDate: Date,
+    published: boolean,
+    versionedTranslations: {
+      modifiedByUser: string;
+      modificationDate: Date;
+      translations: { language: string; content: string }[];
+    }[]
   ): Translation {
     return {
       translationKey,
-      defaultLanguage,
-      defaultLanguageContent,
+      defaultTranslationLanguage,
+      defaultTranslationinLanguage,
       languages,
-      modifiedBy,
-      modifiedAt,
-      createdAt,
+      modifiedByUser,
+      modificationDate,
+      creationDate,
       published,
+      versionedTranslations,
     };
   }
 
@@ -65,151 +88,354 @@ export default function Translations() {
         "fj489hg934",
         "it",
         "Ciao",
-        [{ language: "en", content: "Hello" }],
+        [
+          { language: "it", content: "Ciao" },
+          { language: "en", content: "Hello" },
+        ],
         "admin",
         new Date(),
         new Date(),
-        true
+        false,
+        [
+          {
+            modifiedByUser: "admin",
+            modificationDate: new Date(),
+            translations: [
+              { language: "it", content: "Ciao hist" },
+              { language: "en", content: "Hello hist" },
+            ],
+          },
+          {
+            modifiedByUser: "user",
+            modificationDate: new Date(),
+            translations: [
+              { language: "it", content: "Buondi hist" },
+              { language: "en", content: "Goodday hist" },
+            ],
+          },
+        ]
       ),
       createData(
         "g4803hg04",
         "it",
         "Mondo",
-        [{ language: "en", content: "World" }],
+        [
+          { language: "it", content: "Mondo" },
+          { language: "en", content: "World" },
+        ],
         "admin",
         new Date(),
         new Date(),
-        true
+        true,
+        [
+          {
+            modifiedByUser: "admin",
+            modificationDate: new Date(),
+            translations: [
+              { language: "it", content: "Mondo hist" },
+              { language: "en", content: "World hist" },
+            ],
+          },
+        ]
       ),
       createData(
         "gf3049jg0394",
         "it",
         "Ciao Mondo",
-        [{ language: "en", content: "Hello World" }],
+        [
+          { language: "it", content: "Ciao Mondo" },
+          { language: "en", content: "Hello World" },
+        ],
         "admin",
         new Date(),
         new Date(),
-        true
+        true,
+        [
+          {
+            modifiedByUser: "admin",
+            modificationDate: new Date(),
+            translations: [
+              { language: "it", content: "Ciao Mondo hist" },
+              { language: "en", content: "Hello World hist" },
+            ],
+          },
+        ]
       ),
       createData(
         "gfh3498hg0",
         "it",
         "Ciao Mondo!",
-        [{ language: "en", content: "Hello World!" }],
+        [
+          { language: "it", content: "Ciao Mondo!" },
+          { language: "en", content: "Hello World!" },
+        ],
         "admin",
         new Date(),
         new Date(),
-        true
+        true,
+        [
+          {
+            modifiedByUser: "admin",
+            modificationDate: new Date(),
+            translations: [
+              { language: "it", content: "Ciao Mondo! hist" },
+              { language: "en", content: "Hello World! hist" },
+            ],
+          },
+        ]
       ),
       createData(
         "fj304jg03",
         "it",
         "Ciao Mondo!!",
-        [{ language: "en", content: "Hello World!!" }],
+        [
+          { language: "it", content: "Ciao Mondo!!" },
+          { language: "en", content: "Hello World!!" },
+        ],
         "admin",
         new Date(),
         new Date(),
-        true
+        true,
+        [
+          {
+            modifiedByUser: "admin",
+            modificationDate: new Date(),
+            translations: [
+              { language: "it", content: "Ciao Mondo!! hist" },
+              { language: "en", content: "Hello World!! hist" },
+            ],
+          },
+        ]
       ),
       createData(
         "gj3094jg3",
         "it",
         "Ciao",
-        [{ language: "en", content: "Hello" }],
+        [
+          { language: "it", content: "Ciao" },
+          { language: "en", content: "Hello" },
+        ],
         "admin",
         new Date(),
         new Date(),
-        true
+        true,
+        [
+          {
+            modifiedByUser: "admin",
+            modificationDate: new Date(),
+            translations: [
+              { language: "it", content: "Ciao hist" },
+              { language: "en", content: "Hello hist" },
+            ],
+          },
+        ]
       ),
       createData(
         "gj0394j3g",
         "it",
         "Mondo",
-        [{ language: "en", content: "World" }],
+        [
+          { language: "it", content: "Mondo" },
+          { language: "en", content: "World" },
+        ],
         "admin",
         new Date(),
         new Date(),
-        true
+        true,
+        [
+          {
+            modifiedByUser: "admin",
+            modificationDate: new Date(),
+            translations: [
+              { language: "it", content: "Mondo hist" },
+              { language: "en", content: "World hist" },
+            ],
+          },
+        ]
       ),
       createData(
         "fk30o4kf3o",
         "it",
         "Ciao",
-        [{ language: "en", content: "Hello" }],
+        [
+          { language: "it", content: "Ciao" },
+          { language: "en", content: "Hello" },
+        ],
         "admin",
         new Date(),
         new Date(),
-        true
+        true,
+        [
+          {
+            modifiedByUser: "admin",
+            modificationDate: new Date(),
+            translations: [
+              { language: "it", content: "Ciao hist" },
+              { language: "en", content: "Hello hist" },
+            ],
+          },
+        ]
       ),
       createData(
         "koiwj4ow",
         "it",
         "Mondo",
-        [{ language: "en", content: "World" }],
+        [
+          { language: "it", content: "Mondo" },
+          { language: "en", content: "World" },
+        ],
         "admin",
         new Date(),
         new Date(),
-        true
+        true,
+        [
+          {
+            modifiedByUser: "admin",
+            modificationDate: new Date(),
+            translations: [
+              { language: "it", content: "Mondo hist" },
+              { language: "en", content: "Hello hist" },
+            ],
+          },
+        ]
       ),
       createData(
         "oihvwei",
         "it",
         "Ciao",
-        [{ language: "en", content: "Hello" }],
+        [
+          { language: "it", content: "Ciao" },
+          { language: "en", content: "Hello" },
+        ],
         "admin",
         new Date(),
         new Date(),
-        true
+        true,
+        [
+          {
+            modifiedByUser: "admin",
+            modificationDate: new Date(),
+            translations: [
+              { language: "it", content: "Ciao hist" },
+              { language: "en", content: "Hello hist" },
+            ],
+          },
+        ]
       ),
       createData(
         "fj03ij53",
         "it",
         "Mondo",
-        [{ language: "en", content: "World" }],
+        [
+          { language: "it", content: "Mondo" },
+          { language: "en", content: "World" },
+        ],
         "admin",
         new Date(),
         new Date(),
-        true
+        true,
+        [
+          {
+            modifiedByUser: "admin",
+            modificationDate: new Date(),
+            translations: [
+              { language: "it", content: "Mondo hist" },
+              { language: "en", content: "World hist" },
+            ],
+          },
+        ]
       ),
       createData(
         "34094ut03",
         "it",
         "Ciao",
-        [{ language: "en", content: "Hello" }],
+        [
+          { language: "it", content: "Ciao" },
+          { language: "en", content: "Hello" },
+        ],
         "admin",
         new Date(),
         new Date(),
-        true
+        true,
+        [
+          {
+            modifiedByUser: "admin",
+            modificationDate: new Date(),
+            translations: [
+              { language: "it", content: "Ciao hist" },
+              { language: "en", content: "Hello hist" },
+            ],
+          },
+        ]
       ),
       createData(
         "c3po4ik3m04",
         "it",
         "Mondo",
-        [{ language: "en", content: "World" }],
+        [
+          { language: "it", content: "Mondo" },
+          { language: "en", content: "World" },
+        ],
         "admin",
         new Date(),
         new Date(),
-        true
+        true,
+        [
+          {
+            modifiedByUser: "admin",
+            modificationDate: new Date(),
+            translations: [
+              { language: "it", content: "Mondo hist" },
+              { language: "en", content: "World hist" },
+            ],
+          },
+        ]
       ),
       createData(
         "3904i0c34",
         "it",
         "Ciao",
-        [{ language: "en", content: "Hello" }],
+        [
+          { language: "it", content: "Ciao" },
+          { language: "en", content: "Hello" },
+        ],
         "admin",
         new Date(),
         new Date(),
-        true
+        true,
+        [
+          {
+            modifiedByUser: "admin",
+            modificationDate: new Date(),
+            translations: [
+              { language: "it", content: "Ciao hist" },
+              { language: "en", content: "Hello hist" },
+            ],
+          },
+        ]
       ),
       createData(
         "09fk340mf",
         "it",
         "Mondo",
-        [{ language: "en", content: "World" }],
+        [
+          { language: "it", content: "Mondo" },
+          { language: "en", content: "World" },
+        ],
         "admin",
         new Date(),
         new Date(),
-        true
+        true,
+        [
+          {
+            modifiedByUser: "admin",
+            modificationDate: new Date(),
+            translations: [
+              { language: "it", content: "Mondo hist" },
+              { language: "en", content: "World hist" },
+            ],
+          },
+        ]
       ),
     ];
   }
@@ -220,13 +446,16 @@ export default function Translations() {
       <TranslationTable
         toggleDrawer={toggleDrawer}
         items={getTranslations()}
-        changeTranslationKey={changeTranslationKey}
+        showEdit={showEdit}
+        showHistory={showHistory}
+        showNew={showNew}
       />
       <TranslationDrawer
         open={drawerOpenState}
         toggleDrawer={toggleDrawer}
         translation={translation}
         translationKey={translationKey}
+        view={drawerView}
       />
     </div>
   );

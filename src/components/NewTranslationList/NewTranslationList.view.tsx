@@ -1,16 +1,12 @@
 import * as React from "react";
-import { useEffect } from "react";
 import Box from "@mui/material/Box";
-import Drawer from "@mui/material/Drawer";
 import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
 import TextField from "@mui/material/TextField";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import Typography from "@mui/material/Typography";
-import { Translation } from "@/types/Translation";
 import { useForm } from "react-hook-form";
-import { DrawerListProps } from "./DrawerList.types";
+import { NewTranslationListProps } from "./NewTranslationList.types";
 import { Checkbox, FormControlLabel, FormGroup } from "@mui/material";
 import { TranslationSend } from "@/types/TranslationSend";
 
@@ -44,7 +40,7 @@ function a11yProps(index: number) {
   };
 }
 
-export default function View(props: DrawerListProps) {
+export default function View(props: NewTranslationListProps) {
   const [value, setTabValue] = React.useState(0);
   const { register, handleSubmit, reset, setValue } = useForm();
 
@@ -53,7 +49,7 @@ export default function View(props: DrawerListProps) {
     (language) => language.language !== data.translation.defaultLanguage
   ); */
 
-  let userRole = localStorage.getItem("currentUserRole");
+  const userRole: string = localStorage.getItem("currentUserRole") || "";
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
@@ -66,26 +62,24 @@ export default function View(props: DrawerListProps) {
     for (let key in data) {
       if (data[key] === undefined) {
         if (key === "defaultLanguageContent") {
-          data[key] = props.translation.defaultTranslationinLanguage;
+          data[key] = null;
           languages.push({
-            language: props.translation.defaultTranslationLanguage,
+            language: props.defaultTranslationLanguage,
             content: data[key],
           });
         } else if (key !== "published") {
-          data[key] = props.translation.languages.filter(
-            (language) => language.language === key
-          )[0].content;
+          data[key] = null;
           languages.push({
             language: key,
             content: data[key],
           });
         } else {
-          data[key] = props.translation.published;
+          data[key] = false;
         }
-      } else if (key !== "published") {
+      } else if (key !== "published" && key !== "translationKey") {
         if (key === "defaultLanguageContent") {
           languages.push({
-            language: props.translation.defaultTranslationLanguage,
+            language: props.defaultTranslationLanguage,
             content: data[key],
           });
         } else {
@@ -98,8 +92,8 @@ export default function View(props: DrawerListProps) {
     }
 
     let translation: TranslationSend = {
-      translationKey: props.translation.translationKey,
-      defaultTranslationLanguage: props.translation.defaultTranslationLanguage,
+      translationKey: data.translationKey,
+      defaultTranslationLanguage: props.defaultTranslationLanguage,
       defaultTranslationinLanguage: data.defaultLanguageContent,
       languages: languages,
       modifiedByUser: localStorage.getItem("currentUser") || "",
@@ -116,36 +110,27 @@ export default function View(props: DrawerListProps) {
       <TextField
         id="outlined-read-only-input"
         label="Key"
-        value={data.translationKey}
-        InputProps={{
-          readOnly: true,
-        }}
+        {...register("translationKey", { required: true })}
         sx={{ width: "70%", margin: "0 15% 0 15%" }}
       />
       <FormGroup>
         <form onSubmit={handleSubmit(handleFormSubmit)}>
-          <Box sx={{ marginY: "1em", width: "70%", margin: "1em 15% 0 15%" }}>
-            <Typography variant="body1" gutterBottom component="div">
-              Data creazione: {data.translation.creationDate.toLocaleString()}
-            </Typography>
-            <Typography variant="body1" gutterBottom component="div">
-              Data ultima modifica:{" "}
-              {data.translation.modificationDate.toLocaleString()}
-            </Typography>
+          <Box
+            sx={{
+              marginY: "1em",
+              width: "70%",
+              margin: "1em 15% 0 15%",
+              display:
+                userRole !== null && userRole === "traduttore"
+                  ? "none"
+                  : "block",
+            }}
+          >
             <FormControlLabel
               control={
-                <Checkbox
-                  defaultChecked={data.translation.published}
-                  {...register("published")}
-                />
+                <Checkbox defaultChecked={false} {...register("published")} />
               }
               label="Pubblicato"
-              sx={{
-                display:
-                  userRole !== null && userRole === "traduttore"
-                    ? "none"
-                    : "block",
-              }}
             />
           </Box>
           <Divider sx={{ marginY: "0.5em" }} />
@@ -158,18 +143,15 @@ export default function View(props: DrawerListProps) {
               aria-label="basic tabs example"
             >
               <Tab
-                label={
-                  data.translation.defaultTranslationLanguage + " (default)"
-                }
+                label={props.defaultTranslationLanguage + " (default)"}
                 key={0}
                 {...a11yProps(0)}
               />
-              {data.translation.languages.map((language, index) => {
+              {props.languages.map((language, index) => {
                 return (
-                  language.language !==
-                    data.translation.defaultTranslationLanguage && (
+                  language !== props.defaultTranslationLanguage && (
                     <Tab
-                      label={language.language}
+                      label={language}
                       key={index + 1}
                       {...a11yProps(index + 1)}
                     />
@@ -184,22 +166,19 @@ export default function View(props: DrawerListProps) {
               label=""
               multiline
               rows={4}
-              defaultValue={data.translation.defaultTranslationinLanguage}
               {...register("defaultLanguageContent")}
             />
           </TabPanel>
-          {data.translation.languages.map((language, index) => {
+          {props.languages.map((language, index) => {
             return (
-              language.language !==
-                data.translation.defaultTranslationLanguage && (
+              language !== props.defaultTranslationLanguage && (
                 <TabPanel value={value} index={index} key={index}>
                   <TextField
-                    id={"textarea-language-" + language.language}
+                    id={"textarea-language-" + language}
                     label=""
                     multiline
                     rows={4}
-                    defaultValue={language.content}
-                    {...register(language.language)}
+                    {...register(language)}
                   />
                 </TabPanel>
               )
