@@ -2,7 +2,6 @@ import { ThemeProvider } from "@mui/material";
 import { QueryClientProvider } from "react-query";
 import defaultTheme from "@/globals/defaultTheme";
 import AppRoutes from "@/router/AppRoutes";
-import { queryClient } from "@/queries";
 import { Auth, Amplify } from "aws-amplify";
 import { AuthProvider } from "./stores/AuthProvider";
 import { Provider } from "react-redux";
@@ -22,11 +21,9 @@ function App() {
   return (
     <ThemeProvider theme={defaultTheme}>
       <AuthProvider authenticated={user !== null ? true : false}>
-        <QueryClientProvider client={queryClient}>
-          <Provider store={store}>
-            <AppRoutes />
-          </Provider>
-        </QueryClientProvider>
+        <Provider store={store}>
+          <AppRoutes />
+        </Provider>
       </AuthProvider>
     </ThemeProvider>
   );

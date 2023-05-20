@@ -32,7 +32,7 @@ const columns: readonly Column[] = [
     align: "left",
   },
   { id: "date", label: "Data creazione", minWidth: 100, align: "center" },
-  { id: "published", label: "Pubblicato", minWidth: 50, align: "center" },
+  { id: "published", label: "Stato", minWidth: 50, align: "center" },
   { id: "actions", label: "Azioni", minWidth: 50, align: "right" },
 ];
 
