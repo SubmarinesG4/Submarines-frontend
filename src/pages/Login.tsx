@@ -22,7 +22,7 @@ export default function Login() {
 		formState: { errors, isValid }
 	} = useForm<FormValues>({ mode: "all" });
 
-	const [stage, setStage] = useState(1); // 1 = login stage, 2 = first access stage
+	const [stage, setStage] = useState(1); // 1 = login stage, 2 = first access stage, 3 = complete new password stage
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [newPassword, setNewPassword] = useState("");
