@@ -1,11 +1,9 @@
 import { Alert, Box, Button, Card, CardContent, FilledInput, FormControl, InputLabel, Snackbar } from "@mui/material";
 import { Auth } from "aws-amplify";
 import { useAuth } from "@/stores/AuthProvider";
-import { ISignUpResult } from "amazon-cognito-identity-js";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Navigate, Link } from "react-router-dom";
-import NavBar from "@/components/NavBar";
+import { Link } from "react-router-dom";
 
 interface FormValues {
 	email: string;
