@@ -122,107 +122,120 @@ export default function View(props: DrawerListProps) {
         }}
         sx={{ width: "70%", margin: "0 15% 0 15%" }}
       />
-      <FormGroup>
-        <form onSubmit={handleSubmit(handleFormSubmit)}>
-          <Box sx={{ marginY: "1em", width: "70%", margin: "1em 15% 0 15%" }}>
-            <Typography variant="body1" gutterBottom component="div">
-              Data creazione: {data.translation.creationDate.toLocaleString()}
-            </Typography>
-            <Typography variant="body1" gutterBottom component="div">
-              Data ultima modifica:{" "}
-              {data.translation.modificationDate.toLocaleString()}
-            </Typography>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  defaultChecked={data.translation.published}
-                  {...register("published")}
-                />
-              }
-              label="Pubblicato"
-              sx={{
-                display:
-                  userRole !== null && userRole === "traduttore"
-                    ? "none"
-                    : "block",
-              }}
-            />
-          </Box>
-          <Divider sx={{ marginY: "0.5em" }} />
-          <Box
-            sx={{ borderBottom: 1, borderColor: "divider", paddingTop: "1em" }}
-          >
-            <Tabs
-              value={value}
-              onChange={handleTabChange}
-              aria-label="basic tabs example"
-            >
-              <Tab
-                label={
-                  data.translation.defaultTranslationLanguage + " (default)"
-                }
-                key={0}
-                {...a11yProps(0)}
+
+      <form onSubmit={handleSubmit(handleFormSubmit)}>
+        <Box
+          sx={{
+            marginY: "1em",
+            paddingTop: "0.5em",
+            width: "70%",
+            margin: "0 15% 0 15%",
+          }}
+        >
+          <Typography variant="body1" gutterBottom component="div">
+            Data creazione: {data.translation.creationDate.toLocaleString()}
+          </Typography>
+          <Typography variant="body1" gutterBottom component="div">
+            Data ultima modifica:{" "}
+            {data.translation.modificationDate.toLocaleString()}
+          </Typography>
+          <FormControlLabel
+            control={
+              <Checkbox
+                defaultChecked={data.translation.published}
+                {...register("published")}
               />
-              {data.translation.languages.map((language, index) => {
-                return (
-                  language.language !==
-                    data.translation.defaultTranslationLanguage && (
-                    <Tab
-                      label={language.language}
-                      key={index + 1}
-                      {...a11yProps(index + 1)}
-                    />
-                  )
-                );
-              })}
-            </Tabs>
-          </Box>
-          <TabPanel value={value} index={0} key={0}>
-            <TextField
-              id="textarea-language-default"
-              label=""
-              multiline
-              rows={4}
-              defaultValue={data.translation.defaultTranslationinLanguage}
-              {...register("defaultLanguageContent")}
+            }
+            label="Pubblicato"
+            sx={{
+              display:
+                userRole !== null && userRole === "traduttore"
+                  ? "none"
+                  : "block",
+            }}
+          />
+        </Box>
+        <Divider sx={{ marginY: "0.5em" }} />
+        <Box
+          sx={{ borderBottom: 1, borderColor: "divider", paddingTop: "1em" }}
+        >
+          <Tabs
+            value={value}
+            onChange={handleTabChange}
+            aria-label="basic tabs example"
+          >
+            <Tab
+              label={data.translation.defaultTranslationLanguage + " (default)"}
+              key={0}
+              {...a11yProps(0)}
             />
-          </TabPanel>
-          {data.translation.languages.map((language, index) => {
-            return (
-              language.language !==
-                data.translation.defaultTranslationLanguage && (
-                <TabPanel value={value} index={index} key={index}>
-                  <TextField
-                    id={"textarea-language-" + language.language}
-                    label=""
-                    multiline
-                    rows={4}
-                    defaultValue={language.content}
-                    {...register(language.language)}
+            {data.translation.languages.map((language, index) => {
+              return (
+                language.language !==
+                  data.translation.defaultTranslationLanguage && (
+                  <Tab
+                    label={language.language}
+                    key={index + 1}
+                    {...a11yProps(index + 1)}
                   />
-                </TabPanel>
-              )
-            );
-          })}
-          <Box display="flex" justifyContent="flex-end" alignItems="flex-end">
-            <Button
-              variant="outlined"
-              sx={{ marginX: "0.5em" }}
-              onClick={props.toggleDrawer(false)}
-            >
-              Chiudi
-            </Button>
-            <Button
-              variant="contained"
-              sx={{ marginX: "0.5em" }}
-              onClick={handleSubmit(handleFormSubmit)}
-            >
-              Salva
-            </Button>
-          </Box>
-        </form>
-      </FormGroup>
+                )
+              );
+            })}
+          </Tabs>
+        </Box>
+        <TabPanel value={value} index={0} key={0}>
+          <TextField
+            id="textarea-language-default"
+            label=""
+            multiline
+            rows={4}
+            defaultValue={data.translation.defaultTranslationinLanguage}
+            {...register("defaultLanguageContent")}
+          />
+        </TabPanel>
+        {data.translation.languages.map((language, index) => {
+          return (
+            language.language !==
+              data.translation.defaultTranslationLanguage && (
+              <TabPanel value={value} index={index} key={index}>
+                <TextField
+                  id={"textarea-language-" + language.language}
+                  label=""
+                  multiline
+                  rows={4}
+                  defaultValue={language.content}
+                  {...register(language.language)}
+                />
+              </TabPanel>
+            )
+          );
+        })}
+        <Box display="flex" justifyContent="flex-end" alignItems="flex-end">
+          <Button
+            variant="contained"
+            color="error"
+            disabled={data.translation.published}
+            sx={{ marginX: "0.5em" }}
+            onClick={props.toggleDrawer(false)}
+          >
+            Elimina
+          </Button>
+          <Button
+            variant="outlined"
+            sx={{ marginX: "0.5em" }}
+            onClick={props.toggleDrawer(false)}
+          >
+            Chiudi
+          </Button>
+          <Button
+            variant="contained"
+            sx={{ marginX: "0.5em" }}
+            onClick={handleSubmit(handleFormSubmit)}
+          >
+            Salva
+          </Button>
+        </Box>
+      </form>
     </Box>
   );
 }

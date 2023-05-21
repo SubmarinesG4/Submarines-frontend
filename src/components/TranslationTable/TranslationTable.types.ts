@@ -16,7 +16,7 @@ export type TranslationTableProps = {
   items: Translation[];
   showEdit: (translationKey: string) => any;
   showHistory: (translationKey: string) => any;
-  showNew: (translationKey: string) => any;
+  showNew: () => any;
 };
 
 export type TranslationTableView = React.FC<TranslationTableProps>;
