@@ -4,18 +4,18 @@ import defaultTheme from "@/globals/defaultTheme";
 import AppRoutes from "@/router/AppRoutes";
 import { queryClient } from "@/queries";
 import { Auth, Amplify } from 'aws-amplify';
-import { AuthProvider } from "./stores/AuthProvider";
+import { AuthProvider, useAuth } from "./stores/AuthProvider";
 
 Amplify.configure({
-  Auth: {
-    region: "eu-central-1",
-    userPoolId: "eu-central-1_57mvV5N7n",
-    userPoolWebClientId: "snftpb6f6bsdaphl7rv34lnl"
-  }
-})
+	Auth: {
+	  region: 'eu-central-1',
+	  userPoolId: 'eu-central-1_OcyZlYZEj',
+	  userPoolWebClientId: '7d5ij9ol01l2405r2i5d4vgdvo'
+	}
+});
 
 function App() {
-	const user = localStorage.getItem('webappUser');
+	const user = localStorage.getItem('currentUser');
 
 	return (
 		<ThemeProvider theme={defaultTheme}>

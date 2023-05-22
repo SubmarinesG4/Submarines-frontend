@@ -69,3 +69,7 @@ REGISTRAZIONE, LOGIN
 .linkResetPswd {
 	text-decoration: none;
 }
+
+.headingDesc p {
+	text-align: center;
+}
