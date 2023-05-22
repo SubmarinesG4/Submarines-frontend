@@ -179,6 +179,9 @@ export default function Login() {
 									Cambia password
 								</Button>
 							</Box>
+							<Box className="resetPassword">
+								<Link to={"/resetPassword"} className="linkResetPswd">Password dimenticata?</Link>			
+							</Box>
 						</Box>
 					</form>
 				)}

@@ -50,7 +50,6 @@ export default function ResetPassword() {
             }
         }
     }
-
 	return (
 		<Box className="formBox">
 			<Card className="cardFormBox">
