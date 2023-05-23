@@ -13,7 +13,6 @@ export type UseTranslationTable = (
 
 export type TranslationTableProps = {
   toggleDrawer: (open: boolean) => any;
-  items: Translation[];
   showEdit: (translationKey: string) => any;
   showHistory: (translationKey: string) => any;
   showNew: () => any;

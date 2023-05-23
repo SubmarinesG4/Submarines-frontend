@@ -11,6 +11,7 @@ import Typography from "@mui/material/Typography";
 import { Translation } from "@/types/Translation";
 import { HistoryListProps } from "./HistoryList.types";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { api } from "@/app/services/api";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -45,99 +46,129 @@ function a11yProps(index: number) {
 export default function View(props: HistoryListProps) {
   const [version, setVersion] = React.useState(0);
   const [value, setTabValue] = React.useState(0);
+  const { data, error, isLoading } = api.useGetTranslationQuery({
+    tenant: "tenant3",
+    key: props.translationKey,
+  });
 
-  let data = props;
+  let info = props;
+
+  let translation = data || {
+    translationKey: "errore",
+    defaultTranslationLanguage: "it",
+    defaultTranslationinLanguage: "errore",
+    translations: [],
+    creationDate: new Date(),
+    modificationDate: new Date(),
+    modifiedByUser: "",
+    published: false,
+    versionedTranslations: [],
+  };
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
   };
 
-  return (
-    <Box sx={{ width: "auto", padding: "1em 1em" }} role="presentation">
-      <TextField
-        id="outlined-read-only-input"
-        label="Key"
-        value={data.translationKey}
-        InputProps={{
-          readOnly: true,
-        }}
-        sx={{ width: "70%", margin: "0 15% 0 15%" }}
-      />
-      <FormControl sx={{ width: "70%", margin: "1em 15% 0 15%" }}>
-        <InputLabel id="select-version-label">Versione</InputLabel>
-        <Select
-          labelId="select-version-label"
-          id="select-version"
-          label="Versione"
-          value={version}
-          onChange={(event) => setVersion(event.target.value as number)}
-        >
-          {data.translation.versionedTranslations.map((version, index) => {
-            return (
-              <MenuItem value={index} key={index}>
-                {version.modificationDate.toDateString()} -{" "}
-                {version.modifiedByUser}
-              </MenuItem>
-            );
-          })}
-        </Select>
-      </FormControl>
-      <Box sx={{ marginY: "1em", width: "70%", margin: "1em 15% 0 15%" }}>
-        <Typography variant="body1" gutterBottom component="div">
-          Data modifica:{" "}
-          {data.translation.versionedTranslations[
-            version
-          ].modificationDate.toLocaleString()}
-        </Typography>
-        <Typography variant="body1" gutterBottom component="div">
-          Utente:{" "}
-          {data.translation.versionedTranslations[version].modifiedByUser}
-        </Typography>
-      </Box>
-      <Divider sx={{ marginY: "1em" }} />
-      <Box sx={{ borderBottom: 1, borderColor: "divider", paddingTop: "1em" }}>
-        <Tabs
-          value={value}
-          onChange={handleTabChange}
-          aria-label="basic tabs example"
-        >
-          {data.translation.versionedTranslations[version].translations.map(
+  const handleListRendering = () => {
+    if (isLoading) {
+      return <div>Loading...</div>;
+    } else if (error) {
+      return <div>Error</div>;
+    } else {
+      return translation.translationKey !== "" ? (
+        <Box sx={{ width: "auto", padding: "1em 1em" }} role="presentation">
+          <TextField
+            id="outlined-read-only-input"
+            label="Key"
+            value={info.translationKey}
+            InputProps={{
+              readOnly: true,
+            }}
+            sx={{ width: "70%", margin: "0 15% 0 15%" }}
+          />
+          <FormControl sx={{ width: "70%", margin: "1em 15% 0 15%" }}>
+            <InputLabel id="select-version-label">Versione</InputLabel>
+            <Select
+              labelId="select-version-label"
+              id="select-version"
+              label="Versione"
+              value={version}
+              onChange={(event) => setVersion(event.target.value as number)}
+            >
+              {translation.versionedTranslations.map((version, index) => {
+                return (
+                  <MenuItem value={index} key={index}>
+                    {version.modificationDate.toLocaleString()} -{" "}
+                    {version.modifiedbyUser}
+                  </MenuItem>
+                );
+              })}
+            </Select>
+          </FormControl>
+          <Box sx={{ marginY: "1em", width: "70%", margin: "1em 15% 0 15%" }}>
+            <Typography variant="body1" gutterBottom component="div">
+              Data modifica:{" "}
+              {translation.versionedTranslations[
+                version
+              ].modificationDate.toLocaleString()}
+            </Typography>
+            <Typography variant="body1" gutterBottom component="div">
+              Utente:{" "}
+              {translation.versionedTranslations[version].modifiedbyUser}
+            </Typography>
+          </Box>
+          <Divider sx={{ marginY: "1em" }} />
+          <Box
+            sx={{ borderBottom: 1, borderColor: "divider", paddingTop: "1em" }}
+          >
+            <Tabs
+              value={value}
+              onChange={handleTabChange}
+              aria-label="basic tabs example"
+            >
+              {translation.versionedTranslations[version].translations.map(
+                (language, index) => {
+                  return (
+                    <Tab
+                      label={language.language}
+                      key={index}
+                      {...a11yProps(index)}
+                    />
+                  );
+                }
+              )}
+            </Tabs>
+          </Box>
+          {translation.versionedTranslations[version].translations.map(
             (language, index) => {
               return (
-                <Tab
-                  label={language.language}
-                  key={index}
-                  {...a11yProps(index)}
-                />
+                <TabPanel value={value} index={index} key={index}>
+                  <TextField
+                    id={"textarea-language-" + language.language}
+                    label=""
+                    multiline
+                    rows={4}
+                    value={language.content}
+                  />
+                </TabPanel>
               );
             }
           )}
-        </Tabs>
-      </Box>
-      {data.translation.versionedTranslations[version].translations.map(
-        (language, index) => {
-          return (
-            <TabPanel value={value} index={index} key={index}>
-              <TextField
-                id={"textarea-language-" + language.language}
-                label=""
-                multiline
-                rows={4}
-                value={language.content}
-              />
-            </TabPanel>
-          );
-        }
-      )}
-      <Box display="flex" justifyContent="flex-end" alignItems="flex-end">
-        <Button
-          variant="outlined"
-          sx={{ marginX: "0.5em" }}
-          onClick={props.toggleDrawer(false)}
-        >
-          Chiudi
-        </Button>
-      </Box>
-    </Box>
-  );
+          <Box display="flex" justifyContent="flex-end" alignItems="flex-end">
+            <Button
+              variant="outlined"
+              sx={{ marginX: "0.5em" }}
+              onClick={props.toggleDrawer(false)}
+            >
+              Chiudi
+            </Button>
+          </Box>
+        </Box>
+      ) : (
+        <div>Errore</div>
+      );
+    }
+  };
+
+  return <div>{handleListRendering()}</div>;
 }

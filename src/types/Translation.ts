@@ -2,13 +2,13 @@ interface Translation {
   translationKey: string;
   defaultTranslationLanguage: string;
   defaultTranslationinLanguage: string;
-  languages: { language: string; content: string }[];
-  modifiedByUser: string;
+  translations: { language: string; content: string }[];
+  modifiedbyUser: string;
   modificationDate: Date;
   creationDate: Date;
   published: boolean;
   versionedTranslations: {
-    modifiedByUser: string;
+    modifiedbyUser: string;
     modificationDate: Date;
     translations: { language: string; content: string }[];
   }[];

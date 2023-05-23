@@ -11,7 +11,7 @@ export type UseDrawerList = (
 
 export type DrawerListProps = {
   toggleDrawer: (open: boolean) => any;
-  translation: Translation;
+  setDrawerOpenState: (open: boolean) => any;
   translationKey: string;
 };
 

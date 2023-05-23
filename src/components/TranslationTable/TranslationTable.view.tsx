@@ -25,9 +25,11 @@ import { Translation } from "@/types/Translation";
 import { TranslationTableProps } from "./TranslationTable.types";
 import { TranslationFromList } from "@/types/TranslationFromList";
 import { Filter } from "@/types/Filter";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { DatePicker } from "@mui/x-date-pickers";
+import moment from "moment";
 import { api } from "@/app/services/api";
+import dayjs from "dayjs";
 
 interface Column {
   id: "key" | "translation" | "actions" | "date" | "published";
@@ -50,21 +52,19 @@ const columns: readonly Column[] = [
 export default function View(props: TranslationTableProps) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const { register, handleSubmit } = useForm();
-  const [phraseFilter, setPhraseFilter] = React.useState<string>("");
-  const [dateFilter, setDateFilter] = React.useState<Date | null>(null);
-  const [publishedFilter, setPublishedFilter] = React.useState<number>(-1);
+  const { register, handleSubmit, control, reset } = useForm<Filter>();
+  const [queryFilter, setQueryFilter] = React.useState({
+    phrase: "",
+    date: "",
+    published: "",
+  });
 
   const { data, error, isLoading } = api.useGetAllTranslationsQuery({
     tenant: "tenant3",
+    filter: queryFilter,
   });
-  console.log(data);
 
-  /* const ts1 =
-    api.useGetTranslationQuery({ tenant: "tenant3", key: "test1" }).data || [];
-  console.log(ts1); */
-
-  const rows: TranslationFromList[] = props.items;
+  const rows: TranslationFromList[] = data?.translations || [];
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -75,6 +75,21 @@ export default function View(props: TranslationTableProps) {
   ) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
+  };
+
+  const handleFormSubmit = (data: Filter) => {
+    let filter = {
+      phrase: data.phrase,
+      date: data.date !== null ? dayjs(data.date).format("YYYY-MM-DD") : "",
+      published: data.published === "all" ? "" : data.published,
+    };
+    setQueryFilter(filter);
+    console.log(filter);
+  };
+
+  const handleReset = () => {
+    reset({ phrase: "", date: null, published: "all" });
+    setQueryFilter({ phrase: "", date: "", published: "" });
   };
 
   return (
@@ -96,59 +111,69 @@ export default function View(props: TranslationTableProps) {
           Nuova Traduzione
         </Button>
       </Box>
-      <Box
-        display="flex"
-        justifyContent="flex-end"
-        alignItems="flex-end"
-        sx={{ marginY: "1em", marginX: "1em" }}
-      >
-        <TextField
-          id="phrase-filter-field"
-          label="Frase"
-          sx={{ maxWidth: "200px" }}
-          variant="filled"
-          size="small"
-          value={phraseFilter}
-          onChange={(event) => setPhraseFilter(event.target.value)}
-        />
-        <DatePicker
-          label="Data creazione"
-          sx={{ marginLeft: "1em", maxWidth: "200px" }}
-          slotProps={{ textField: { variant: "filled", size: "small" } }}
-          value={dateFilter}
-          onChange={(newValue) => setDateFilter(newValue)}
-        />
-        <FormControl sx={{ marginLeft: "1em" }}>
-          <InputLabel id="language-filter-field-label">Pubblicato</InputLabel>
-          <Select
-            labelId="published-filter-field-label"
-            id="published-filter-field"
-            label="Pubblicato"
-            sx={{ minWidth: "200px", maxWidth: "250px" }}
+      <form onSubmit={handleSubmit(handleFormSubmit)}>
+        <Box
+          display="flex"
+          justifyContent="flex-end"
+          alignItems="flex-end"
+          sx={{ marginY: "1em", marginX: "1em" }}
+        >
+          <TextField
+            id="phrase-filter-field"
+            label="Frase"
+            sx={{ maxWidth: "200px" }}
             variant="filled"
             size="small"
-            value={publishedFilter}
-            onChange={(event) =>
-              setPublishedFilter(event.target.value as number)
-            }
+            {...register("phrase")}
+          />
+          <Controller
+            name="date"
+            control={control}
+            defaultValue={null}
+            render={({ field: { onChange, value } }) => (
+              <DatePicker
+                label="Data creazione"
+                sx={{ marginLeft: "1em", maxWidth: "200px" }}
+                slotProps={{ textField: { variant: "filled", size: "small" } }}
+                disableFuture
+                value={value}
+                onChange={onChange}
+              />
+            )}
+          />
+          <FormControl sx={{ marginLeft: "1em" }}>
+            <InputLabel id="language-filter-field-label">Pubblicato</InputLabel>
+            <Select
+              labelId="published-filter-field-label"
+              id="published-filter-field"
+              label="Pubblicato"
+              sx={{ minWidth: "200px", maxWidth: "250px" }}
+              variant="filled"
+              size="small"
+              defaultValue={"all"}
+              {...register("published")}
+            >
+              <MenuItem value={"all"}>Tutti</MenuItem>
+              <MenuItem value={"true"}>Pubblicato</MenuItem>
+              <MenuItem value={"false"}>Non pubblicato</MenuItem>
+            </Select>
+          </FormControl>
+          <Button
+            sx={{ marginLeft: "1em" }}
+            variant="text"
+            onClick={handleSubmit(handleFormSubmit)}
           >
-            <MenuItem value={-1}>Tutti</MenuItem>
-            <MenuItem value={1}>Pubblicato</MenuItem>
-            <MenuItem value={0}>Non pubblicato</MenuItem>
-          </Select>
-        </FormControl>
-        <Button
-          sx={{ marginLeft: "1em" }}
-          variant="text"
-          onClick={() => {
-            setPhraseFilter("");
-            setDateFilter(null);
-            setPublishedFilter(-1);
-          }}
-        >
-          Reset filtri
-        </Button>
-      </Box>
+            Filtra
+          </Button>
+          <Button
+            sx={{ marginLeft: "1em" }}
+            variant="text"
+            onClick={handleReset}
+          >
+            Reset
+          </Button>
+        </Box>
+      </form>
       <TableContainer>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>

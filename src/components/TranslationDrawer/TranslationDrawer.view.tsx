@@ -16,20 +16,20 @@ export default function View(props: TranslationDrawerProps) {
           {props.open && props.view === 1 && (
             <DrawerList
               toggleDrawer={props.toggleDrawer}
-              translation={props.translation}
+              setDrawerOpenState={props.setDrawerOpenState}
               translationKey={props.translationKey}
             />
           )}
           {props.open && props.view === 2 && (
             <HistoryList
               toggleDrawer={props.toggleDrawer}
-              translation={props.translation}
               translationKey={props.translationKey}
             />
           )}
           {props.open && props.view === 3 && (
             <NewTranslationList
               toggleDrawer={props.toggleDrawer}
+              setDrawerOpenState={props.setDrawerOpenState}
               languages={["it", "en"]}
               defaultTranslationLanguage="it"
             />

@@ -1,9 +1,8 @@
 interface TranslationSend {
-  translationKey: string;
   defaultTranslationLanguage: string;
   defaultTranslationinLanguage: string;
-  languages: { language: string; content: string }[];
-  modifiedByUser: string;
+  translations: { language: string; content: string }[];
+  modifiedbyUser: string;
   published: boolean;
 }
 

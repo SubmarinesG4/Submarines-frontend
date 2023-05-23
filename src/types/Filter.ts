@@ -1,7 +1,7 @@
 interface Filter {
-  key: string | null;
-  phrase: string | null;
-  published: boolean | null;
+  phrase: string;
+  date: Date | null;
+  published: "all" | "true" | "false";
 }
 
 export type { Filter };

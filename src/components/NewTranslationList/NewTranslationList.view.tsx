@@ -91,18 +91,18 @@ export default function View(props: NewTranslationListProps) {
       }
     }
 
-    let translation: TranslationSend = {
-      translationKey: data.translationKey,
+    let result: TranslationSend = {
       defaultTranslationLanguage: props.defaultTranslationLanguage,
       defaultTranslationinLanguage: data.defaultLanguageContent,
-      languages: languages,
-      modifiedByUser: localStorage.getItem("currentUser") || "",
+      translations: languages,
+      modifiedbyUser: localStorage.getItem("currentUser") || "",
       published: data.published,
     };
 
-    console.log(translation);
+    console.log(result);
     //TODO: salvare i dati
     // traduzione default, altre lingue, data modifica, pubblicato, chi ha modificato
+    props.setDrawerOpenState(false);
   };
 
   return (

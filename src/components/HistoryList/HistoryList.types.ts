@@ -11,7 +11,6 @@ export type UseHistoryList = (
 
 export type HistoryListProps = {
   toggleDrawer: (open: boolean) => any;
-  translation: Translation;
   translationKey: string;
 };
 
