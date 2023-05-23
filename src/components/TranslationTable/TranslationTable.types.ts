@@ -1,18 +1,22 @@
-import { Translation } from "@/types/Translation"
-import React from "react"
+import { Translation } from "@/types/Translation";
+import React from "react";
 
 export type UseTranslationTableOptions = {
-    translationKey: string
-}
+  translationKey: string;
+};
 
-export type UseTranslationTableReturn = {}
+export type UseTranslationTableReturn = {};
 
-export type UseTranslationTable = (options: UseTranslationTableOptions) => UseTranslationTableReturn
+export type UseTranslationTable = (
+  options: UseTranslationTableOptions
+) => UseTranslationTableReturn;
 
 export type TranslationTableProps = {
-    toggleDrawer: (open: boolean) => any
-    items: Translation[]
-    changeTranslationKey: (translationKey: string) => any
-}
+  toggleDrawer: (open: boolean) => any;
+  items: Translation[];
+  showEdit: (translationKey: string) => any;
+  showHistory: (translationKey: string) => any;
+  showNew: () => any;
+};
 
-export type TranslationTableView = React.FC<TranslationTableProps>
+export type TranslationTableView = React.FC<TranslationTableProps>;

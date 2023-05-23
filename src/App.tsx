@@ -1,10 +1,14 @@
-import { ThemeProvider } from "@mui/material";
+import { ThemeProvider } from "@mui/material/styles";
 import { QueryClientProvider } from "react-query";
 import defaultTheme from "@/globals/defaultTheme";
 import AppRoutes from "@/router/AppRoutes";
-import { queryClient } from "@/queries";
 import { Auth, Amplify } from 'aws-amplify';
 import { AuthProvider, useAuth } from "./stores/AuthProvider";
+import { Provider } from "react-redux";
+import { store } from "./app/store";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import "dayjs/locale/it";
 
 Amplify.configure({
 	Auth: {
@@ -16,16 +20,17 @@ Amplify.configure({
 
 function App() {
 	const user = localStorage.getItem('currentUser');
-
-	return (
-		<ThemeProvider theme={defaultTheme}>
-			<AuthProvider authenticated={user !== null ? true : false}>
-				<QueryClientProvider client={queryClient}>
-					<AppRoutes />
-				</QueryClientProvider>
-			</AuthProvider>
-		</ThemeProvider>
-	);
+  return (
+    <ThemeProvider theme={defaultTheme}>
+      <AuthProvider authenticated={user !== null ? true : false}>
+        <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="it">
+          <Provider store={store}>
+            <AppRoutes />
+          </Provider>
+        </LocalizationProvider>
+      </AuthProvider>
+    </ThemeProvider>
+  );
 }
 
 export default App;

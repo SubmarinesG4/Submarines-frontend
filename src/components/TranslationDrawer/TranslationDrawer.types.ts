@@ -1,23 +1,26 @@
-import { Translation } from "@/types/Translation"
-import React from "react"
+import { Translation } from "@/types/Translation";
+import React from "react";
 
 export type UseTranslationDrawerOptions = {
-    translationKey: string
-    items: Translation[]
-}
+  translationKey: string;
+  translation: Translation;
+};
 
 export type UseTranslationDrawerReturn = {
-    handleSave: () => void
-    translation: Translation
-}
+  handleSave: (obj: Translation) => void;
+  translation: Translation;
+};
 
-export type UseTranslationDrawer = (options: UseTranslationDrawerOptions) => UseTranslationDrawerReturn
+export type UseTranslationDrawer = (
+  options: UseTranslationDrawerOptions
+) => UseTranslationDrawerReturn;
 
-export type TranslationDrawerProps = { 
-    open: boolean
-    toggleDrawer: (open: boolean) => any
-    items: Translation[]
-    translationKey: string
-}
+export type TranslationDrawerProps = {
+  open: boolean;
+  toggleDrawer: (open: boolean) => any;
+  translation: Translation;
+  translationKey: string;
+  view: 1 | 2 | 3;
+};
 
-export type TranslationDrawerView = React.FC<TranslationDrawerProps>
+export type TranslationDrawerView = React.FC<TranslationDrawerProps>;

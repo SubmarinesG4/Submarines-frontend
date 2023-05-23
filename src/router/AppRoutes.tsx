@@ -6,32 +6,37 @@ import ResetPassword from "@/pages/ResetPassword";
 import Translations from "@/pages/Translations";
 
 export default function AppRoutes() {
-	const auth = useAuth();
+  const auth = useAuth();
 
-	return (
-		<BrowserRouter>
-			<Routes>
-                <Route path='/' element={
-                    auth?.auth ?
-                        <Navigate to="/home" replace /> :
-                        <Navigate to="/login" replace />
-                } />
-                <Route path="/login" element={
-                    auth?.auth ?
-                        <Navigate to="/home" replace /> :
-                        <Login />
-                } />
-                <Route path="/resetPassword" element={
-                    auth?.auth ?
-                        <Navigate to="/home" replace /> :
-                        <ResetPassword />
-                } />
-                <Route path="/home" element={
-                    auth?.auth ?
-                        <Home /> :
-                        <Navigate to="/login" replace />
-                } />
-            </Routes>
-		</BrowserRouter>
-	);
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            auth?.auth ? (
+              <Navigate to="/home" replace />
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        />
+        <Route
+          path="/login"
+          element={auth?.auth ? <Navigate to="/home" replace /> : <Login />}
+        />
+        <Route
+          path="/resetPassword"
+          element={
+            auth?.auth ? <Navigate to="/home" replace /> : <ResetPassword />
+          }
+        />
+        <Route
+          path="/home"
+          element={auth?.auth ? <Home /> : <Navigate to="/login" replace />}
+        />
+        <Route path="/translations" element={<Translations />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }

@@ -8,12 +8,12 @@ import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
 import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import { NavBarProps } from "./NavBar.types";
+import useLogic from "./NavBar.logic";
 
-const pages = ["Tenants"];
+const pages = [{ name: "Tenants", route: "/tenants" }];
 const settings = ["Account", "Logout"];
 
 export default function View(props: NavBarProps) {
@@ -39,36 +39,37 @@ export default function View(props: NavBarProps) {
     setAnchorElUser(null);
   };
 
+  const userRole = localStorage.getItem("currentUserRole");
+
+  const data = useLogic(props);
+
+  const navigateTo = (path: string, nav: boolean) => (event: any) => {
+    if (nav) {
+      handleCloseNavMenu();
+    } else {
+      handleCloseUserMenu();
+    }
+    data.navigateTo(path);
+  };
+
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <Typography
-            variant="h6"
-            noWrap
-            component="a"
-            href="/"
-            sx={{
-              mr: 2,
-              display: { xs: "none", md: "flex" },
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
-              color: "inherit",
-              textDecoration: "none",
-            }}
-          >
-            SUBMARINES
-          </Typography>
-
-          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
-            <IconButton
+          <Box sx={{ flexGrow: 1 }}>
+            <IconButton // PICCOLO
               size="large"
               aria-label="account of current user"
               aria-controls="menu-appbar"
               aria-haspopup="true"
               onClick={handleOpenNavMenu}
               color="inherit"
+              sx={{
+                display:
+                  userRole !== null && userRole === "traduttore"
+                    ? "none"
+                    : "block",
+              }}
             >
               <MenuIcon />
             </IconButton>
@@ -87,24 +88,26 @@ export default function View(props: NavBarProps) {
               open={Boolean(anchorElNav)}
               onClose={handleCloseNavMenu}
               sx={{
-                display: { xs: "block", md: "none" },
+                display: "block",
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
+                <MenuItem
+                  key={page.name}
+                  onClick={navigateTo(page.route, true)}
+                >
+                  <Typography textAlign="center">{page.name}</Typography>
                 </MenuItem>
               ))}
             </Menu>
           </Box>
-          <Typography
+          <Typography // PICCOLO
             variant="h5"
             noWrap
             component="a"
             href=""
             sx={{
               mr: 2,
-              display: { xs: "flex", md: "none" },
               flexGrow: 1,
               fontFamily: "monospace",
               fontWeight: 700,
@@ -115,18 +118,6 @@ export default function View(props: NavBarProps) {
           >
             SUBMARINES
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: "white", display: "block" }}
-              >
-                {page}
-              </Button>
-            ))}
-          </Box>
-
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -149,11 +140,12 @@ export default function View(props: NavBarProps) {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
+              <MenuItem key="Account" onClick={navigateTo("/account", false)}>
+                <Typography textAlign="center">Account</Typography>
+              </MenuItem>
+              <MenuItem key="Logout" onClick={data.signOut}>
+                <Typography textAlign="center">Logout</Typography>
+              </MenuItem>
             </Menu>
           </Box>
         </Toolbar>
