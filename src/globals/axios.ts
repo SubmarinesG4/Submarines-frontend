@@ -1,23 +1,20 @@
 import Auth from "@aws-amplify/auth";
 import axios from "axios";
 
-async function getDefaulHeaders() {
-	const user = await Auth.currentAuthenticatedUser();
+export async function getDefaulHeaders() { 
+    const user = await Auth.currentAuthenticatedUser();
     const token = user.signInUserSession?.idToken?.jwtToken;
-    return {headers: {'Authorization': `Bearer ${token}`}}
+    const group = user.signInUserSession.accessToken.payload["cognito:groups"];
+    return {headers: {'Authorization': `Bearer ${token}`, 'Group': group}};
 }
 
-const axiosInstance = axios.create({
-	baseURL: 'http://localhost:3000/dev/',
-	timeout: 1000,
-});
-
-export async function getData<T>(url: string) {
-	const defHeaders = await getDefaulHeaders();
-	return axiosInstance.get<T>(url, defHeaders);
+export async function getData(url: string) {
+    const defHeaders = await getDefaulHeaders();
+	console.log(defHeaders);
+    return axios.get(url,  defHeaders );
 }
 
-export async function putData<T>(url: string, data: unknown) {
-	const defHeaders = await getDefaulHeaders();
-	return axiosInstance.put<T>(url, data, defHeaders);
+export async function putData(url: string, data: unknown) {
+    const defHeaders = await getDefaulHeaders();
+    return axios.put(url, data, defHeaders);
 }
