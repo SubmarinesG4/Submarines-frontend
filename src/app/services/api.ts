@@ -8,7 +8,7 @@ type GetAllTranslationsResponse = {
 
 // Define a service using a base URL and expected endpoints
 export const api = createApi({
-  reducerPath: "pokemonApi",
+  reducerPath: "translationsApi",
   tagTypes: ["Translations"],
   baseQuery: fetchBaseQuery({
     baseUrl: "http://localhost:3000/dev/",
@@ -22,7 +22,10 @@ export const api = createApi({
     },
   }),
   endpoints: (builder) => ({
-    getAllTranslations: builder.query<GetAllTranslationsResponse, void>({
+    getAllTranslations: builder.query<
+      GetAllTranslationsResponse,
+      { tenant: string }
+    >({
       query: (tenant) => `${tenant}/translation`,
     }),
     getTranslation: builder.query<Translation, { tenant: string; key: string }>(

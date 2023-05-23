@@ -4,6 +4,8 @@ import TranslationDrawer from "@/components/TranslationDrawer";
 import TranslationTable from "@/components/TranslationTable";
 import { Button } from "@mui/material";
 import { Translation } from "@/types/Translation";
+import { TranslationFromList } from "@/types/TranslationFromList";
+import { api } from "@/app/services/api";
 
 export default function Translations() {
   const [drawerOpenState, setDrawerOpenState] = useState(false);
@@ -23,6 +25,9 @@ export default function Translations() {
 
   //localStorage.setItem("currentUserRole", "traduttore"); // TEST
   //localStorage.removeItem("currentUserRole"); // TEST
+
+  const ts = api.useGetAllTranslationsQuery({ tenant: "tenant3" }).data || [];
+  console.log(ts);
 
   const toggleDrawer =
     (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {

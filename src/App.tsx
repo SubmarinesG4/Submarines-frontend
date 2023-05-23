@@ -1,4 +1,4 @@
-import { ThemeProvider } from "@mui/material";
+import { ThemeProvider } from "@mui/material/styles";
 import { QueryClientProvider } from "react-query";
 import defaultTheme from "@/globals/defaultTheme";
 import AppRoutes from "@/router/AppRoutes";
