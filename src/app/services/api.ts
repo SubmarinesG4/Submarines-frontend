@@ -26,7 +26,7 @@ export const api = createApi({
       GetAllTranslationsResponse,
       { tenant: string }
     >({
-      query: (tenant) => `${tenant}/translation`,
+      query: ({ tenant }) => `${tenant}/translations`,
     }),
     getTranslation: builder.query<Translation, { tenant: string; key: string }>(
       {

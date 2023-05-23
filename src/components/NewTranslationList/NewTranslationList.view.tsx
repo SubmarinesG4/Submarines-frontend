@@ -147,17 +147,19 @@ export default function View(props: NewTranslationListProps) {
                 key={0}
                 {...a11yProps(0)}
               />
-              {props.languages.map((language, index) => {
-                return (
-                  language !== props.defaultTranslationLanguage && (
+              {props.languages
+                .filter(
+                  (language) => language !== props.defaultTranslationLanguage
+                )
+                .map((language, index) => {
+                  return (
                     <Tab
                       label={language}
                       key={index + 1}
                       {...a11yProps(index + 1)}
                     />
-                  )
-                );
-              })}
+                  );
+                })}
             </Tabs>
           </Box>
           <TabPanel value={value} index={0} key={0}>
@@ -169,10 +171,11 @@ export default function View(props: NewTranslationListProps) {
               {...register("defaultLanguageContent")}
             />
           </TabPanel>
-          {props.languages.map((language, index) => {
-            return (
-              language !== props.defaultTranslationLanguage && (
-                <TabPanel value={value} index={index} key={index}>
+          {props.languages
+            .filter((language) => language !== props.defaultTranslationLanguage)
+            .map((language, index) => {
+              return (
+                <TabPanel value={value} index={index + 1} key={index + 1}>
                   <TextField
                     id={"textarea-language-" + language}
                     label=""
@@ -181,9 +184,8 @@ export default function View(props: NewTranslationListProps) {
                     {...register(language)}
                   />
                 </TabPanel>
-              )
-            );
-          })}
+              );
+            })}
           <Box display="flex" justifyContent="flex-end" alignItems="flex-end">
             <Button
               variant="outlined"

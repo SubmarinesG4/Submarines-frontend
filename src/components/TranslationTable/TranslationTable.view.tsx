@@ -27,6 +27,7 @@ import { TranslationFromList } from "@/types/TranslationFromList";
 import { Filter } from "@/types/Filter";
 import { useForm } from "react-hook-form";
 import { DatePicker } from "@mui/x-date-pickers";
+import { api } from "@/app/services/api";
 
 interface Column {
   id: "key" | "translation" | "actions" | "date" | "published";
@@ -53,6 +54,15 @@ export default function View(props: TranslationTableProps) {
   const [phraseFilter, setPhraseFilter] = React.useState<string>("");
   const [dateFilter, setDateFilter] = React.useState<Date | null>(null);
   const [publishedFilter, setPublishedFilter] = React.useState<number>(-1);
+
+  const { data, error, isLoading } = api.useGetAllTranslationsQuery({
+    tenant: "tenant3",
+  });
+  console.log(data);
+
+  /* const ts1 =
+    api.useGetTranslationQuery({ tenant: "tenant3", key: "test1" }).data || [];
+  console.log(ts1); */
 
   const rows: TranslationFromList[] = props.items;
 

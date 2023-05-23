@@ -169,18 +169,21 @@ export default function View(props: DrawerListProps) {
               key={0}
               {...a11yProps(0)}
             />
-            {data.translation.languages.map((language, index) => {
-              return (
-                language.language !==
-                  data.translation.defaultTranslationLanguage && (
+            {data.translation.languages
+              .filter(
+                (language) =>
+                  language.language !==
+                  data.translation.defaultTranslationLanguage
+              )
+              .map((language, index) => {
+                return (
                   <Tab
                     label={language.language}
                     key={index + 1}
                     {...a11yProps(index + 1)}
                   />
-                )
-              );
-            })}
+                );
+              })}
           </Tabs>
         </Box>
         <TabPanel value={value} index={0} key={0}>
@@ -193,11 +196,14 @@ export default function View(props: DrawerListProps) {
             {...register("defaultLanguageContent")}
           />
         </TabPanel>
-        {data.translation.languages.map((language, index) => {
-          return (
-            language.language !==
-              data.translation.defaultTranslationLanguage && (
-              <TabPanel value={value} index={index} key={index}>
+        {data.translation.languages
+          .filter(
+            (language) =>
+              language.language !== data.translation.defaultTranslationLanguage
+          )
+          .map((language, index) => {
+            return (
+              <TabPanel value={value} index={index + 1} key={index + 1}>
                 <TextField
                   id={"textarea-language-" + language.language}
                   label=""
@@ -207,9 +213,8 @@ export default function View(props: DrawerListProps) {
                   {...register(language.language)}
                 />
               </TabPanel>
-            )
-          );
-        })}
+            );
+          })}
         <Box display="flex" justifyContent="flex-end" alignItems="flex-end">
           <Button
             variant="contained"

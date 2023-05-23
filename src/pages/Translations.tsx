@@ -23,12 +23,6 @@ export default function Translations() {
   });
   const [drawerView, setDrawerView] = useState<1 | 2 | 3>(1); // 1 = DrawerList, 2 = HistoryList, 3 = NewTranslationList
 
-  //localStorage.setItem("currentUserRole", "traduttore"); // TEST
-  //localStorage.removeItem("currentUserRole"); // TEST
-
-  const ts = api.useGetAllTranslationsQuery({ tenant: "tenant3" }).data || [];
-  console.log(ts);
-
   const toggleDrawer =
     (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
       if (event.type === "keydown") {
