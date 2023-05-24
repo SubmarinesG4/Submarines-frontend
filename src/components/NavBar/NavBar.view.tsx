@@ -14,7 +14,6 @@ import { NavBarProps } from "./NavBar.types";
 import useLogic from "./NavBar.logic";
 
 const pages = [{ name: "Tenants", route: "/tenants" }];
-const settings = ["Account", "Logout"];
 
 export default function View(props: NavBarProps) {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
@@ -37,6 +36,11 @@ export default function View(props: NavBarProps) {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+  };
+
+  const handleLogOut = () => {
+    data.signOut();
+    data.navigateTo("/login");
   };
 
   const userRole = localStorage.getItem("currentUserRole");
@@ -141,9 +145,9 @@ export default function View(props: NavBarProps) {
               onClose={handleCloseUserMenu}
             >
               <MenuItem key="Account" onClick={navigateTo("/account", false)}>
-                <Typography textAlign="center">Account</Typography>
+                <Typography textAlign="center">Dettaglio Tenant</Typography>
               </MenuItem>
-              <MenuItem key="Logout" onClick={data.signOut}>
+              <MenuItem key="Logout" onClick={handleLogOut}>
                 <Typography textAlign="center">Logout</Typography>
               </MenuItem>
             </Menu>
