@@ -9,6 +9,7 @@ import { useForm } from "react-hook-form";
 import { NewTranslationListProps } from "./NewTranslationList.types";
 import { Checkbox, FormControlLabel, FormGroup } from "@mui/material";
 import { TranslationSend } from "@/types/TranslationSend";
+import { api } from "@/app/services/api";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -43,6 +44,7 @@ function a11yProps(index: number) {
 export default function View(props: NewTranslationListProps) {
   const [value, setTabValue] = React.useState(0);
   const { register, handleSubmit, reset, setValue } = useForm();
+  const [updateTranslation, isUpdating] = api.usePutTranslationMutation();
 
   let data = props;
   /* data.translation.languages = data.translation.languages.filter(
@@ -101,6 +103,11 @@ export default function View(props: NewTranslationListProps) {
 
     console.log(result);
     //TODO: salvare i dati
+    updateTranslation({
+      tenant: "tenant3",
+      key: data.translationKey,
+      translation: result,
+    });
     // traduzione default, altre lingue, data modifica, pubblicato, chi ha modificato
     props.setDrawerOpenState(false);
   };

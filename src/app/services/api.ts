@@ -2,6 +2,7 @@ import { Translation } from "@/types/Translation";
 import { TranslationFromList } from "@/types/TranslationFromList";
 import { TranslationSend } from "@/types/TranslationSend";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { key } from "localforage";
 
 type GetAllTranslationsResponse = {
   translations: TranslationFromList[];
@@ -32,10 +33,18 @@ export const api = createApi({
     >({
       query: ({ tenant, filter }) =>
         `${tenant}/translations?published=${filter.published}&date=${filter.date}&word=${filter.phrase}`,
+      providesTags: ["Translations"],
     }),
     getTranslation: builder.query<Translation, { tenant: string; key: string }>(
       {
         query: ({ tenant, key }) => `${tenant}/translation/${key}`,
+        providesTags: (result, error, arg) =>
+          result
+            ? [
+                { type: "Translations", id: result.translationKey },
+                "Translations",
+              ]
+            : ["Translations"],
       }
     ),
     putTranslation: builder.mutation<
@@ -50,12 +59,15 @@ export const api = createApi({
         return {
           url: `${tenant}/translation/${key}`,
           method: "PUT",
-          translation,
+          body: translation,
         };
       },
       // Invalidates all Post-type queries providing the `LIST` id - after all, depending of the sort order,
       // that newly created post could show up in any lists.
-      invalidatesTags: [{ type: "Translations", id: "LIST" }],
+      invalidatesTags: (result, error, arg) => [
+        { type: "Translations", id: arg.key },
+        "Translations",
+      ],
     }),
     deleteTranslation: builder.mutation<
       any,
@@ -72,7 +84,10 @@ export const api = createApi({
       },
       // Invalidates all Post-type queries providing the `LIST` id - after all, depending of the sort order,
       // that newly created post could show up in any lists.
-      invalidatesTags: [{ type: "Translations", id: "LIST" }],
+      invalidatesTags: (result, error, arg) => [
+        { type: "Translations", id: arg.key },
+        "Translations",
+      ],
     }),
   }),
 });
