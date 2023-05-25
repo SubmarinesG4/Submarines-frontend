@@ -13,6 +13,7 @@ import { HistoryListProps } from "./HistoryList.types";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { api } from "@/app/services/api";
 import useLogic from "./HistoryList.logic";
+import dayjs from "dayjs";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -110,8 +111,8 @@ export default function View(props: HistoryListProps) {
               {translation.versionedTranslations.map((version, index) => {
                 return (
                   <MenuItem value={index} key={index}>
-                    {version.modificationDate.toLocaleString()} -{" "}
-                    {version.modifiedbyUser}
+                    {dayjs(version.modificationDate).format("DD/MM/YYYY HH:mm")}{" "}
+                    - {version.modifiedbyUser}
                   </MenuItem>
                 );
               })}
@@ -120,9 +121,9 @@ export default function View(props: HistoryListProps) {
           <Box sx={{ marginY: "1em", width: "70%", margin: "1em 15% 0 15%" }}>
             <Typography variant="body1" gutterBottom component="div">
               Data modifica:{" "}
-              {translation.versionedTranslations[
-                version
-              ].modificationDate.toLocaleString()}
+              {dayjs(
+                translation.versionedTranslations[version].modificationDate
+              ).format("DD/MM/YYYY HH:mm")}
             </Typography>
             <Typography variant="body1" gutterBottom component="div">
               Utente:{" "}

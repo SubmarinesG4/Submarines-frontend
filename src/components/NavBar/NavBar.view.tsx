@@ -12,6 +12,7 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import { NavBarProps } from "./NavBar.types";
 import useLogic from "./NavBar.logic";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 const pages = [{ name: "Tenants", route: "/tenants" }];
 
@@ -125,7 +126,12 @@ export default function View(props: NavBarProps) {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <Avatar
+                  alt={localStorage.getItem("currentUser") || "User"}
+                  sx={{ bgcolor: "#1976d2", color: "white" }}
+                >
+                  <AccountCircleIcon />
+                </Avatar>
               </IconButton>
             </Tooltip>
             <Menu

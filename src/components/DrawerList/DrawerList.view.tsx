@@ -28,6 +28,7 @@ import {
   isErrorWithMessage,
   isFetchBaseQueryError,
 } from "@/app/services/helpers";
+import dayjs from "dayjs";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -235,11 +236,12 @@ export default function View(props: DrawerListProps) {
               }}
             >
               <Typography variant="body1" gutterBottom component="div">
-                Data creazione: {translation.creationDate.toLocaleString()}
+                Data creazione:{" "}
+                {dayjs(translation.creationDate).format("DD/MM/YYYY HH:mm")}
               </Typography>
               <Typography variant="body1" gutterBottom component="div">
                 Data ultima modifica:{" "}
-                {translation.modificationDate.toLocaleString()}
+                {dayjs(translation.modificationDate).format("DD/MM/YYYY HH:mm")}
               </Typography>
               <FormControlLabel
                 control={
