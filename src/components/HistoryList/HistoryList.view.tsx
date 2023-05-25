@@ -12,6 +12,7 @@ import { Translation } from "@/types/Translation";
 import { HistoryListProps } from "./HistoryList.types";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { api } from "@/app/services/api";
+import useLogic from "./HistoryList.logic";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -46,9 +47,9 @@ function a11yProps(index: number) {
 export default function View(props: HistoryListProps) {
   const [version, setVersion] = React.useState(0);
   const [value, setTabValue] = React.useState(0);
-  const { data, error, isLoading } = api.useGetTranslationQuery({
-    tenant: "tenant3",
-    key: props.translationKey,
+
+  const { data, error, isLoading } = useLogic({
+    translationKey: props.translationKey,
   });
 
   let info = props;
@@ -71,9 +72,20 @@ export default function View(props: HistoryListProps) {
 
   const handleListRendering = () => {
     if (isLoading) {
-      return <div>Loading...</div>;
+      return <Box sx={{ margin: "1em" }}>Loading...</Box>;
     } else if (error) {
-      return <div>Error</div>;
+      if ("status" in error) {
+        props.showError(
+          "error" in error ? error.error : JSON.stringify(error.data)
+        );
+      } else {
+        props.showError(
+          error.message ? error.message : "Errore nel fetch delle traduzioni"
+        );
+      }
+      return (
+        <Box sx={{ margin: "1em" }}>Errore nel fetch della traduzione</Box>
+      );
     } else {
       return translation.translationKey !== "" ? (
         <Box sx={{ width: "auto", padding: "1em 1em" }} role="presentation">

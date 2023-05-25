@@ -1,11 +1,18 @@
 import { Translation } from "@/types/Translation";
+import { TranslationFromList } from "@/types/TranslationFromList";
+import { SerializedError } from "@reduxjs/toolkit";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/dist/query";
 import React from "react";
 
 export type UseTranslationTableOptions = {
-  translationKey: string;
+  filter: { phrase: string; date: string; published: string };
 };
 
-export type UseTranslationTableReturn = {};
+export type UseTranslationTableReturn = {
+  data: TranslationFromList[];
+  isLoading: boolean;
+  error: FetchBaseQueryError | SerializedError | undefined;
+};
 
 export type UseTranslationTable = (
   options: UseTranslationTableOptions

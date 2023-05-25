@@ -44,7 +44,7 @@ function a11yProps(index: number) {
 export default function View(props: NewTranslationListProps) {
   const [value, setTabValue] = React.useState(0);
   const { register, handleSubmit, reset, setValue } = useForm();
-  const [updateTranslation, isUpdating] = api.usePutTranslationMutation();
+  const [updateTranslation, putStatus] = api.usePutTranslationMutation();
 
   let data = props;
   /* data.translation.languages = data.translation.languages.filter(
@@ -109,7 +109,23 @@ export default function View(props: NewTranslationListProps) {
       translation: result,
     });
     // traduzione default, altre lingue, data modifica, pubblicato, chi ha modificato
-    props.setDrawerOpenState(false);
+    if (putStatus.error) {
+      if ("status" in putStatus.error) {
+        props.showError(
+          "error" in putStatus.error
+            ? putStatus.error.error
+            : JSON.stringify(putStatus.error.data)
+        );
+      } else {
+        props.showError(
+          putStatus.error.message
+            ? putStatus.error.message
+            : "Errore nella creazione della traduzione"
+        );
+      }
+    } else {
+      props.setDrawerOpenState(false);
+    }
   };
 
   return (

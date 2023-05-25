@@ -12,6 +12,7 @@ export type UseNewTranslationList = (
 export type NewTranslationListProps = {
   toggleDrawer: (open: boolean) => any;
   setDrawerOpenState: (open: boolean) => any;
+  showError: (message: string) => any;
   languages: string[];
   defaultTranslationLanguage: string;
 };

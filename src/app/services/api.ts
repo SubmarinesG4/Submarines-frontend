@@ -2,7 +2,6 @@ import { Translation } from "@/types/Translation";
 import { TranslationFromList } from "@/types/TranslationFromList";
 import { TranslationSend } from "@/types/TranslationSend";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { key } from "localforage";
 
 type GetAllTranslationsResponse = {
   translations: TranslationFromList[];

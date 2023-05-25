@@ -23,6 +23,7 @@ import {
 } from "@mui/material";
 import { TranslationSend } from "@/types/TranslationSend";
 import { api } from "@/app/services/api";
+import useLogic from "./DrawerList.logic";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -58,12 +59,12 @@ export default function View(props: DrawerListProps) {
   const [value, setTabValue] = React.useState(0);
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const { register, handleSubmit, reset, setValue } = useForm();
-  const { data, error, isLoading } = api.useGetTranslationQuery({
-    tenant: "tenant3",
-    key: props.translationKey,
+  const [updateTranslation, putStatus] = api.usePutTranslationMutation();
+  const [deleteTranslation, deleteStatus] = api.useDeleteTranslationMutation();
+
+  const { data, error, isLoading } = useLogic({
+    translationKey: props.translationKey,
   });
-  const [updateTranslation, isUpdating] = api.usePutTranslationMutation();
-  const [deleteTranslation, isDeleting] = api.useDeleteTranslationMutation();
 
   let info = props;
   let translation = data || {
@@ -73,7 +74,7 @@ export default function View(props: DrawerListProps) {
     translations: [],
     creationDate: new Date(),
     modificationDate: new Date(),
-    modifiedByUser: "",
+    modifiedbyUser: "",
     published: false,
     versionedTranslations: [],
   };
@@ -137,7 +138,23 @@ export default function View(props: DrawerListProps) {
       translation: result,
     });
     //TODO: Alert errori
-    props.setDrawerOpenState(false);
+    if (putStatus.error) {
+      if ("status" in putStatus.error) {
+        props.showError(
+          "error" in putStatus.error
+            ? putStatus.error.error
+            : JSON.stringify(putStatus.error.data)
+        );
+      } else {
+        props.showError(
+          putStatus.error.message
+            ? putStatus.error.message
+            : "Errore nell'update della traduzione"
+        );
+      }
+    } else {
+      props.setDrawerOpenState(false);
+    }
   };
 
   const handleDelete = () => {
@@ -146,7 +163,23 @@ export default function View(props: DrawerListProps) {
       key: translation.translationKey,
     });
     handleDialogClose();
-    props.setDrawerOpenState(false);
+    if (deleteStatus.error) {
+      if ("status" in deleteStatus.error) {
+        props.showError(
+          "error" in deleteStatus.error
+            ? deleteStatus.error.error
+            : JSON.stringify(deleteStatus.error.data)
+        );
+      } else {
+        props.showError(
+          deleteStatus.error.message
+            ? deleteStatus.error.message
+            : "Errore nell'eliminazione della traduzione"
+        );
+      }
+    } else {
+      props.setDrawerOpenState(false);
+    }
   };
 
   const handleDialogOpen = () => {
@@ -159,9 +192,20 @@ export default function View(props: DrawerListProps) {
 
   const handleListRendering = () => {
     if (isLoading) {
-      return <div>Loading...</div>;
+      return <Box sx={{ margin: "1em" }}>Loading...</Box>;
     } else if (error) {
-      return <div>Error</div>;
+      if ("status" in error) {
+        props.showError(
+          "error" in error ? error.error : JSON.stringify(error.data)
+        );
+      } else {
+        props.showError(
+          error.message ? error.message : "Errore nel fetch delle traduzioni"
+        );
+      }
+      return (
+        <Box sx={{ margin: "1em" }}>Errore nel fetch della traduzione</Box>
+      );
     } else {
       return translation.translationKey !== "" ? (
         <Box sx={{ width: "auto", padding: "1em 1em" }} role="presentation">
