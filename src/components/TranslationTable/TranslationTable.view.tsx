@@ -101,16 +101,6 @@ export default function View(props: TranslationTableProps) {
     if (isLoading) {
       return <Box sx={{ margin: "1em" }}>Loading...</Box>;
     } else if (error) {
-      if ("status" in error) {
-        setErrorMessage(
-          "error" in error ? error.error : JSON.stringify(error.data)
-        );
-      } else {
-        setErrorMessage(
-          error.message ? error.message : "Errore nel fetch delle traduzioni"
-        );
-      }
-      setErrorOpen(true);
       return (
         <Box sx={{ margin: "1em" }}>Errore nel fetch delle traduzioni</Box>
       );
