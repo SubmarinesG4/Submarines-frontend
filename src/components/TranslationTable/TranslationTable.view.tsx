@@ -124,150 +124,168 @@ export default function View(props: TranslationTableProps) {
               Nuova Traduzione
             </Button>
           </Box>
-          <form onSubmit={handleSubmit(handleFormSubmit)}>
-            <Box
-              display="flex"
-              justifyContent="flex-end"
-              alignItems="flex-end"
-              sx={{ marginY: "1em", marginX: "1em" }}
-            >
-              <TextField
-                id="phrase-filter-field"
-                label="Frase"
-                sx={{ maxWidth: "200px" }}
-                variant="filled"
-                size="small"
-                {...register("phrase")}
-              />
-              <Controller
-                name="date"
-                control={control}
-                defaultValue={null}
-                render={({ field: { onChange, value } }) => (
-                  <DatePicker
-                    label="Data creazione"
-                    sx={{ marginLeft: "1em", maxWidth: "200px" }}
-                    slotProps={{
-                      textField: { variant: "filled", size: "small" },
-                    }}
-                    disableFuture
-                    value={value}
-                    onChange={onChange}
-                  />
-                )}
-              />
-              <FormControl sx={{ marginLeft: "1em" }}>
-                <InputLabel id="language-filter-field-label">
-                  Pubblicato
-                </InputLabel>
-                <Select
-                  labelId="published-filter-field-label"
-                  id="published-filter-field"
-                  label="Pubblicato"
-                  sx={{ minWidth: "200px", maxWidth: "250px" }}
-                  variant="filled"
-                  size="small"
-                  defaultValue={"all"}
-                  {...register("published")}
+          {rows.length > 0 && (
+            <Box>
+              <form onSubmit={handleSubmit(handleFormSubmit)}>
+                <Box
+                  display="flex"
+                  justifyContent="flex-end"
+                  alignItems="flex-end"
+                  sx={{ marginY: "1em", marginX: "1em" }}
                 >
-                  <MenuItem value={"all"}>Tutti</MenuItem>
-                  <MenuItem value={"true"}>Pubblicato</MenuItem>
-                  <MenuItem value={"false"}>Non pubblicato</MenuItem>
-                </Select>
-              </FormControl>
-              <Button
-                sx={{ marginLeft: "1em" }}
-                variant="text"
-                onClick={handleSubmit(handleFormSubmit)}
-              >
-                Filtra
-              </Button>
-              <Button
-                sx={{ marginLeft: "1em" }}
-                variant="text"
-                onClick={handleReset}
-              >
-                Reset
-              </Button>
-            </Box>
-          </form>
-          <TableContainer>
-            <Table stickyHeader aria-label="sticky table">
-              <TableHead>
-                <TableRow>
-                  {columns.map((column) => (
-                    <TableCell
-                      key={column.id}
-                      align={column.align}
-                      style={{ minWidth: column.minWidth }}
+                  <TextField
+                    id="phrase-filter-field"
+                    label="Frase"
+                    sx={{ maxWidth: "200px" }}
+                    variant="filled"
+                    size="small"
+                    {...register("phrase")}
+                  />
+                  <Controller
+                    name="date"
+                    control={control}
+                    defaultValue={null}
+                    render={({ field: { onChange, value } }) => (
+                      <DatePicker
+                        label="Data creazione"
+                        sx={{ marginLeft: "1em", maxWidth: "200px" }}
+                        slotProps={{
+                          textField: { variant: "filled", size: "small" },
+                        }}
+                        disableFuture
+                        value={value}
+                        onChange={onChange}
+                      />
+                    )}
+                  />
+                  <FormControl sx={{ marginLeft: "1em" }}>
+                    <InputLabel id="language-filter-field-label">
+                      Pubblicato
+                    </InputLabel>
+                    <Select
+                      labelId="published-filter-field-label"
+                      id="published-filter-field"
+                      label="Pubblicato"
+                      sx={{ minWidth: "200px", maxWidth: "250px" }}
+                      variant="filled"
+                      size="small"
+                      defaultValue={"all"}
+                      {...register("published")}
                     >
-                      {column.label}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {rows
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row) => {
-                    return (
-                      <TableRow
-                        hover
-                        role="checkbox"
-                        tabIndex={-1}
-                        key={row.translationKey}
-                      >
-                        <TableCell key={"key"} align={columns[0].align}>
-                          {row.translationKey}
+                      <MenuItem value={"all"}>Tutti</MenuItem>
+                      <MenuItem value={"true"}>Pubblicato</MenuItem>
+                      <MenuItem value={"false"}>Non pubblicato</MenuItem>
+                    </Select>
+                  </FormControl>
+                  <Button
+                    sx={{ marginLeft: "1em" }}
+                    variant="text"
+                    onClick={handleSubmit(handleFormSubmit)}
+                  >
+                    Filtra
+                  </Button>
+                  <Button
+                    sx={{ marginLeft: "1em" }}
+                    variant="text"
+                    onClick={handleReset}
+                  >
+                    Reset
+                  </Button>
+                </Box>
+              </form>
+              <TableContainer>
+                <Table stickyHeader aria-label="sticky table">
+                  <TableHead>
+                    <TableRow>
+                      {columns.map((column) => (
+                        <TableCell
+                          key={column.id}
+                          align={column.align}
+                          style={{ minWidth: column.minWidth }}
+                        >
+                          {column.label}
                         </TableCell>
-                        <TableCell key={"translation"} align={columns[1].align}>
-                          {row.defaultTranslationinLanguage}
-                        </TableCell>
-                        <TableCell key={"actions"} align={columns[2].align}>
-                          <Box
-                            sx={{ display: "flex", justifyContent: "flex-end" }}
+                      ))}
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {rows
+                      .slice(
+                        page * rowsPerPage,
+                        page * rowsPerPage + rowsPerPage
+                      )
+                      .map((row) => {
+                        return (
+                          <TableRow
+                            hover
+                            role="checkbox"
+                            tabIndex={-1}
+                            key={row.translationKey}
                           >
-                            <IconButton
-                              sx={{ marginRight: "0.2em" }}
-                              onClick={props.showEdit(row.translationKey)}
+                            <TableCell key={"key"} align={columns[0].align}>
+                              {row.translationKey}
+                            </TableCell>
+                            <TableCell
+                              key={"translation"}
+                              align={columns[1].align}
                             >
-                              <EditIcon />
-                            </IconButton>
-                            <IconButton
-                              onClick={props.showHistory(row.translationKey)}
-                            >
-                              <HistoryIcon />
-                            </IconButton>
-                          </Box>
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          <TablePagination
-            rowsPerPageOptions={[10, 25, 100]}
-            component="div"
-            count={rows.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
-          <Snackbar
-            open={errorOpen}
-            autoHideDuration={5000}
-            onClose={handleErrorClose}
-          >
-            <Alert
-              onClose={handleErrorClose}
-              severity="error"
-              sx={{ width: "100%" }}
-            >
-              {errorMessage}
-            </Alert>
-          </Snackbar>
+                              {row.defaultTranslationinLanguage}
+                            </TableCell>
+                            <TableCell key={"actions"} align={columns[2].align}>
+                              <Box
+                                sx={{
+                                  display: "flex",
+                                  justifyContent: "flex-end",
+                                }}
+                              >
+                                <IconButton
+                                  sx={{ marginRight: "0.2em" }}
+                                  onClick={props.showEdit(row.translationKey)}
+                                >
+                                  <EditIcon />
+                                </IconButton>
+                                <IconButton
+                                  onClick={props.showHistory(
+                                    row.translationKey
+                                  )}
+                                >
+                                  <HistoryIcon />
+                                </IconButton>
+                              </Box>
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+              <TablePagination
+                rowsPerPageOptions={[10, 25, 100]}
+                component="div"
+                count={rows.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+              />
+              <Snackbar
+                open={errorOpen}
+                autoHideDuration={5000}
+                onClose={handleErrorClose}
+              >
+                <Alert
+                  onClose={handleErrorClose}
+                  severity="error"
+                  sx={{ width: "100%" }}
+                >
+                  {errorMessage}
+                </Alert>
+              </Snackbar>
+            </Box>
+          )}
+          {rows.length === 0 && (
+            <Box sx={{ margin: "1em" }}>Nessuna traduzione</Box>
+          )}
         </Paper>
       );
     }
