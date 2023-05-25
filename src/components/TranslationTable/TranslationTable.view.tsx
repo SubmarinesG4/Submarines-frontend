@@ -107,92 +107,94 @@ export default function View(props: TranslationTableProps) {
     } else {
       return (
         <Paper sx={{ width: "100%", overflow: "hidden" }}>
-          <Box
-            display="flex"
-            justifyContent="flex-start"
-            alignItems="center"
-            sx={{ marginY: "1em", marginX: "1em" }}
-          >
-            <Typography variant="h5" component="div">
-              Traduzioni
-            </Typography>
-            <Button
-              variant="contained"
-              sx={{ marginLeft: "1em" }}
-              onClick={props.showNew()}
+          <Box>
+            <Box
+              display="flex"
+              justifyContent="flex-start"
+              alignItems="center"
+              sx={{ marginY: "1em", marginX: "1em" }}
             >
-              Nuova Traduzione
-            </Button>
+              <Typography variant="h5" component="div">
+                Traduzioni
+              </Typography>
+              <Button
+                variant="contained"
+                sx={{ marginLeft: "1em" }}
+                onClick={props.showNew()}
+              >
+                Nuova Traduzione
+              </Button>
+            </Box>
+            <form onSubmit={handleSubmit(handleFormSubmit)}>
+              <Box
+                display="flex"
+                justifyContent="flex-end"
+                alignItems="flex-end"
+                sx={{ marginY: "1em", marginX: "1em" }}
+              >
+                <TextField
+                  id="phrase-filter-field"
+                  label="Frase"
+                  sx={{ maxWidth: "200px" }}
+                  variant="filled"
+                  size="small"
+                  {...register("phrase")}
+                />
+                <Controller
+                  name="date"
+                  control={control}
+                  defaultValue={null}
+                  render={({ field: { onChange, value } }) => (
+                    <DatePicker
+                      label="Data creazione"
+                      sx={{ marginLeft: "1em", maxWidth: "200px" }}
+                      slotProps={{
+                        textField: { variant: "filled", size: "small" },
+                      }}
+                      disableFuture
+                      value={value}
+                      onChange={onChange}
+                    />
+                  )}
+                />
+                <FormControl sx={{ marginLeft: "1em" }}>
+                  <InputLabel id="language-filter-field-label">
+                    Pubblicato
+                  </InputLabel>
+                  <Select
+                    labelId="published-filter-field-label"
+                    id="published-filter-field"
+                    label="Pubblicato"
+                    sx={{ minWidth: "200px", maxWidth: "250px" }}
+                    variant="filled"
+                    size="small"
+                    defaultValue={"all"}
+                    {...register("published")}
+                  >
+                    <MenuItem value={"all"}>Tutti</MenuItem>
+                    <MenuItem value={"true"}>Pubblicato</MenuItem>
+                    <MenuItem value={"false"}>Non pubblicato</MenuItem>
+                  </Select>
+                </FormControl>
+                <Button
+                  sx={{ marginLeft: "1em" }}
+                  variant="text"
+                  onClick={handleSubmit(handleFormSubmit)}
+                >
+                  Filtra
+                </Button>
+                <Button
+                  sx={{ marginLeft: "1em" }}
+                  variant="text"
+                  onClick={handleReset}
+                >
+                  Reset
+                </Button>
+              </Box>
+            </form>
           </Box>
           {rows.length > 0 && (
             <Box>
-              <form onSubmit={handleSubmit(handleFormSubmit)}>
-                <Box
-                  display="flex"
-                  justifyContent="flex-end"
-                  alignItems="flex-end"
-                  sx={{ marginY: "1em", marginX: "1em" }}
-                >
-                  <TextField
-                    id="phrase-filter-field"
-                    label="Frase"
-                    sx={{ maxWidth: "200px" }}
-                    variant="filled"
-                    size="small"
-                    {...register("phrase")}
-                  />
-                  <Controller
-                    name="date"
-                    control={control}
-                    defaultValue={null}
-                    render={({ field: { onChange, value } }) => (
-                      <DatePicker
-                        label="Data creazione"
-                        sx={{ marginLeft: "1em", maxWidth: "200px" }}
-                        slotProps={{
-                          textField: { variant: "filled", size: "small" },
-                        }}
-                        disableFuture
-                        value={value}
-                        onChange={onChange}
-                      />
-                    )}
-                  />
-                  <FormControl sx={{ marginLeft: "1em" }}>
-                    <InputLabel id="language-filter-field-label">
-                      Pubblicato
-                    </InputLabel>
-                    <Select
-                      labelId="published-filter-field-label"
-                      id="published-filter-field"
-                      label="Pubblicato"
-                      sx={{ minWidth: "200px", maxWidth: "250px" }}
-                      variant="filled"
-                      size="small"
-                      defaultValue={"all"}
-                      {...register("published")}
-                    >
-                      <MenuItem value={"all"}>Tutti</MenuItem>
-                      <MenuItem value={"true"}>Pubblicato</MenuItem>
-                      <MenuItem value={"false"}>Non pubblicato</MenuItem>
-                    </Select>
-                  </FormControl>
-                  <Button
-                    sx={{ marginLeft: "1em" }}
-                    variant="text"
-                    onClick={handleSubmit(handleFormSubmit)}
-                  >
-                    Filtra
-                  </Button>
-                  <Button
-                    sx={{ marginLeft: "1em" }}
-                    variant="text"
-                    onClick={handleReset}
-                  >
-                    Reset
-                  </Button>
-                </Box>
-              </form>
               <TableContainer>
                 <Table stickyHeader aria-label="sticky table">
                   <TableHead>
