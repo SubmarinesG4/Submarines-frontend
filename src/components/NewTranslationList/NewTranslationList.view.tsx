@@ -10,6 +10,13 @@ import { NewTranslationListProps } from "./NewTranslationList.types";
 import { Checkbox, FormControlLabel, FormGroup } from "@mui/material";
 import { TranslationSend } from "@/types/TranslationSend";
 import { api } from "@/app/services/api";
+import {
+  isFetchBaseQueryError,
+  isErrorWithMessage,
+} from "@/app/services/helpers";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/dist/query";
+import { Serializable } from "child_process";
+import { SerializedError } from "@reduxjs/toolkit";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -101,30 +108,30 @@ export default function View(props: NewTranslationListProps) {
       published: data.published,
     };
 
-    //console.log(result);
-
+    console.log(result);
     updateTranslation({
       tenant: "tenant3",
       key: data.translationKey,
       translation: result,
-    });
-    if (putStatus.error) {
-      if ("status" in putStatus.error) {
-        props.showError(
-          "error" in putStatus.error
-            ? putStatus.error.error
-            : JSON.stringify(putStatus.error.data)
-        );
-      } else {
-        props.showError(
-          putStatus.error.message
-            ? putStatus.error.message
-            : "Errore nella creazione della traduzione"
-        );
-      }
-    } else {
-      props.setDrawerOpenState(false);
-    }
+    })
+      .unwrap()
+      .then((payload) => {
+        console.log(payload);
+        props.setDrawerOpenState(false);
+      })
+      .catch((err) => {
+        if (isFetchBaseQueryError(err)) {
+          let errMsg =
+            "error" in err
+              ? err.error
+              : JSON.stringify(err.data).substring(0, 100) + "...";
+          console.log(errMsg);
+          props.showError(errMsg);
+        } else if (isErrorWithMessage(err)) {
+          console.log(err.message);
+          props.showError(err.message);
+        }
+      });
   };
 
   return (

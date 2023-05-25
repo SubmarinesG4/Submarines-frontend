@@ -24,6 +24,10 @@ import {
 import { TranslationSend } from "@/types/TranslationSend";
 import { api } from "@/app/services/api";
 import useLogic from "./DrawerList.logic";
+import {
+  isErrorWithMessage,
+  isFetchBaseQueryError,
+} from "@/app/services/helpers";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -136,49 +140,52 @@ export default function View(props: DrawerListProps) {
       tenant: "tenant3", // TODO: chiamata tenant da fare in alto
       key: translation.translationKey,
       translation: result,
-    });
-    if (putStatus.error) {
-      if ("status" in putStatus.error) {
-        props.showError(
-          "error" in putStatus.error
-            ? putStatus.error.error
-            : JSON.stringify(putStatus.error.data)
-        );
-      } else {
-        props.showError(
-          putStatus.error.message
-            ? putStatus.error.message
-            : "Errore nell'update della traduzione"
-        );
-      }
-    } else {
-      props.setDrawerOpenState(false);
-    }
+    })
+      .unwrap()
+      .then((payload) => {
+        console.log(payload);
+        props.setDrawerOpenState(false);
+      })
+      .catch((err) => {
+        if (isFetchBaseQueryError(err)) {
+          let errMsg =
+            "error" in err
+              ? err.error
+              : JSON.stringify(err.data).substring(0, 100) + "...";
+          console.log(errMsg);
+          props.showError(errMsg);
+        } else if (isErrorWithMessage(err)) {
+          console.log(err.message);
+          props.showError(err.message);
+        }
+      });
   };
 
   const handleDelete = () => {
     deleteTranslation({
       tenant: "tenant3", // TODO: chiamata tenant da fare in alto
       key: translation.translationKey,
-    });
-    handleDialogClose();
-    if (deleteStatus.error) {
-      if ("status" in deleteStatus.error) {
-        props.showError(
-          "error" in deleteStatus.error
-            ? deleteStatus.error.error
-            : JSON.stringify(deleteStatus.error.data)
-        );
-      } else {
-        props.showError(
-          deleteStatus.error.message
-            ? deleteStatus.error.message
-            : "Errore nell'eliminazione della traduzione"
-        );
-      }
-    } else {
-      props.setDrawerOpenState(false);
-    }
+    })
+      .unwrap()
+      .then((payload) => {
+        console.log(payload);
+        handleDialogClose();
+        props.setDrawerOpenState(false);
+      })
+      .catch((err) => {
+        handleDialogClose();
+        if (isFetchBaseQueryError(err)) {
+          let errMsg =
+            "error" in err
+              ? err.error
+              : JSON.stringify(err.data).substring(0, 100) + "...";
+          console.log(errMsg);
+          props.showError(errMsg);
+        } else if (isErrorWithMessage(err)) {
+          console.log(err.message);
+          props.showError(err.message);
+        }
+      });
   };
 
   const handleDialogOpen = () => {
