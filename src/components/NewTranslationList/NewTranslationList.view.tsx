@@ -101,14 +101,13 @@ export default function View(props: NewTranslationListProps) {
       published: data.published,
     };
 
-    console.log(result);
-    //TODO: salvare i dati
+    //console.log(result);
+
     updateTranslation({
       tenant: "tenant3",
       key: data.translationKey,
       translation: result,
     });
-    // traduzione default, altre lingue, data modifica, pubblicato, chi ha modificato
     if (putStatus.error) {
       if ("status" in putStatus.error) {
         props.showError(

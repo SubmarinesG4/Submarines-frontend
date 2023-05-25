@@ -130,14 +130,13 @@ export default function View(props: DrawerListProps) {
       published: info.published,
     };
 
-    console.log(result);
-    //TODO: Salvare i dati
+    //console.log(result);
+
     updateTranslation({
       tenant: "tenant3", // TODO: chiamata tenant da fare in alto
       key: translation.translationKey,
       translation: result,
     });
-    //TODO: Alert errori
     if (putStatus.error) {
       if ("status" in putStatus.error) {
         props.showError(
