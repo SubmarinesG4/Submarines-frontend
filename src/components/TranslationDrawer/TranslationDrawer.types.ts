@@ -8,7 +8,6 @@ export type UseTranslationDrawerOptions = {
 
 export type UseTranslationDrawerReturn = {
   handleSave: (obj: Translation) => void;
-  translation: Translation;
 };
 
 export type UseTranslationDrawer = (
@@ -18,7 +17,7 @@ export type UseTranslationDrawer = (
 export type TranslationDrawerProps = {
   open: boolean;
   toggleDrawer: (open: boolean) => any;
-  translation: Translation;
+  setDrawerOpenState: (open: boolean) => any;
   translationKey: string;
   view: 1 | 2 | 3;
 };

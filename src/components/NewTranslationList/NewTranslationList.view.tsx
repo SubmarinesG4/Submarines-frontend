@@ -9,45 +9,19 @@ import { useForm } from "react-hook-form";
 import { NewTranslationListProps } from "./NewTranslationList.types";
 import { Checkbox, FormControlLabel, FormGroup } from "@mui/material";
 import { TranslationSend } from "@/types/TranslationSend";
-
-interface TabPanelProps {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
-  key: number;
-}
-
-function TabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
-      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
-    </div>
-  );
-}
-
-function a11yProps(index: number) {
-  return {
-    id: `simple-tab-${index}`,
-    "aria-controls": `simple-tabpanel-${index}`,
-  };
-}
+import { api } from "@/app/services/api";
+import {
+  isFetchBaseQueryError,
+  isErrorWithMessage,
+} from "@/app/services/helpers";
+import TabPanel, { a11yProps } from "../TabPanel/TabPanel.view";
 
 export default function View(props: NewTranslationListProps) {
   const [value, setTabValue] = React.useState(0);
   const { register, handleSubmit, reset, setValue } = useForm();
+  const [updateTranslation, putStatus] = api.usePutTranslationMutation();
 
   let data = props;
-  /* data.translation.languages = data.translation.languages.filter(
-    (language) => language.language !== data.translation.defaultLanguage
-  ); */
 
   const userRole: string = localStorage.getItem("currentUserRole") || "";
 
@@ -91,18 +65,38 @@ export default function View(props: NewTranslationListProps) {
       }
     }
 
-    let translation: TranslationSend = {
-      translationKey: data.translationKey,
+    let result: TranslationSend = {
       defaultTranslationLanguage: props.defaultTranslationLanguage,
       defaultTranslationinLanguage: data.defaultLanguageContent,
-      languages: languages,
-      modifiedByUser: localStorage.getItem("currentUser") || "",
+      translations: languages,
+      modifiedbyUser: localStorage.getItem("currentUser") || "",
       published: data.published,
     };
 
-    console.log(translation);
-    //TODO: salvare i dati
-    // traduzione default, altre lingue, data modifica, pubblicato, chi ha modificato
+    console.log(result);
+    updateTranslation({
+      tenant: "tenant3",
+      key: data.translationKey,
+      translation: result,
+    })
+      .unwrap()
+      .then((payload) => {
+        console.log(payload);
+        props.setDrawerOpenState(false);
+      })
+      .catch((err) => {
+        if (isFetchBaseQueryError(err)) {
+          let errMsg =
+            "error" in err
+              ? err.error
+              : JSON.stringify(err.data).substring(0, 100) + "...";
+          console.log(errMsg);
+          props.showError(errMsg);
+        } else if (isErrorWithMessage(err)) {
+          console.log(err.message);
+          props.showError(err.message);
+        }
+      });
   };
 
   return (

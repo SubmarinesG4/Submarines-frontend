@@ -12,9 +12,9 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import { NavBarProps } from "./NavBar.types";
 import useLogic from "./NavBar.logic";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 const pages = [{ name: "Tenants", route: "/tenants" }];
-const settings = ["Account", "Logout"];
 
 export default function View(props: NavBarProps) {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
@@ -37,6 +37,11 @@ export default function View(props: NavBarProps) {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+  };
+
+  const handleLogOut = () => {
+    data.signOut();
+    data.navigateTo("/login");
   };
 
   const userRole = localStorage.getItem("currentUserRole");
@@ -121,7 +126,12 @@ export default function View(props: NavBarProps) {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <Avatar
+                  alt={localStorage.getItem("currentUser") || "User"}
+                  sx={{ bgcolor: "#1976d2", color: "white" }}
+                >
+                  <AccountCircleIcon />
+                </Avatar>
               </IconButton>
             </Tooltip>
             <Menu
@@ -141,9 +151,9 @@ export default function View(props: NavBarProps) {
               onClose={handleCloseUserMenu}
             >
               <MenuItem key="Account" onClick={navigateTo("/account", false)}>
-                <Typography textAlign="center">Account</Typography>
+                <Typography textAlign="center">Dettaglio Tenant</Typography>
               </MenuItem>
-              <MenuItem key="Logout" onClick={data.signOut}>
+              <MenuItem key="Logout" onClick={handleLogOut}>
                 <Typography textAlign="center">Logout</Typography>
               </MenuItem>
             </Menu>

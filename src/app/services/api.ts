@@ -1,9 +1,10 @@
 import { Translation } from "@/types/Translation";
+import { TranslationFromList } from "@/types/TranslationFromList";
 import { TranslationSend } from "@/types/TranslationSend";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 type GetAllTranslationsResponse = {
-  items: Translation[];
+  translations: TranslationFromList[];
 };
 
 // Define a service using a base URL and expected endpoints
@@ -24,33 +25,68 @@ export const api = createApi({
   endpoints: (builder) => ({
     getAllTranslations: builder.query<
       GetAllTranslationsResponse,
-      { tenant: string }
+      {
+        tenant: string;
+        filter: { phrase: string; date: string; published: string };
+      }
     >({
-      query: ({ tenant }) => `${tenant}/translations`,
+      query: ({ tenant, filter }) =>
+        `${tenant}/translations?published=${filter.published}&date=${filter.date}&word=${filter.phrase}`,
+      providesTags: ["Translations"],
     }),
     getTranslation: builder.query<Translation, { tenant: string; key: string }>(
       {
         query: ({ tenant, key }) => `${tenant}/translation/${key}`,
+        providesTags: (result, error, arg) =>
+          result
+            ? [
+                { type: "Translations", id: result.translationKey },
+                "Translations",
+              ]
+            : ["Translations"],
       }
     ),
     putTranslation: builder.mutation<
       any,
       {
         tenant: string;
-        translationKey: string;
+        key: string;
         translation: Partial<TranslationSend>;
       }
     >({
-      query({ tenant, translationKey, translation }) {
+      query({ tenant, key, translation }) {
         return {
-          url: `${tenant}/translation/${translationKey}`,
-          method: "POST",
-          translation,
+          url: `${tenant}/translation/${key}`,
+          method: "PUT",
+          body: translation,
         };
       },
       // Invalidates all Post-type queries providing the `LIST` id - after all, depending of the sort order,
       // that newly created post could show up in any lists.
-      invalidatesTags: [{ type: "Translations", id: "LIST" }],
+      invalidatesTags: (result, error, arg) => [
+        { type: "Translations", id: arg.key },
+        "Translations",
+      ],
+    }),
+    deleteTranslation: builder.mutation<
+      any,
+      {
+        tenant: string;
+        key: string;
+      }
+    >({
+      query({ tenant, key }) {
+        return {
+          url: `${tenant}/translation/${key}`,
+          method: "DELETE",
+        };
+      },
+      // Invalidates all Post-type queries providing the `LIST` id - after all, depending of the sort order,
+      // that newly created post could show up in any lists.
+      invalidatesTags: (result, error, arg) => [
+        { type: "Translations", id: arg.key },
+        "Translations",
+      ],
     }),
   }),
 });
