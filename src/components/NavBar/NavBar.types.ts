@@ -3,8 +3,7 @@ import React from "react";
 export type UseNavBarOptions = {};
 
 export type UseNavBarReturn = {
-  signOut: () => void;
-  navigateTo: (path: string) => void;
+	signOut: () => void;
 };
 
 export type UseNavBar = (options: UseNavBarOptions) => UseNavBarReturn;
