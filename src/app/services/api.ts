@@ -58,6 +58,23 @@ export const api = createApi({
 		getTenant: builder.query<any, { id: string }>({
 			query: ({ id }) => `/${id}`,
 		}),
+		putTenant: builder.mutation<
+			any,
+			{
+				tenantName: string
+				numberTranslationAvailable: number
+				defaultTranslationLanguage: string
+				listAvailableLanguages: string[]
+			}
+		>({
+			query({ tenantName, ...tenant }) {
+				return {
+					url: `/${tenantName}`,
+					method: "PUT",
+					body: tenant,
+				};
+			},
+		}),
 	}),
 });
 
@@ -68,5 +85,6 @@ export const {
 	useGetTranslationQuery,
 	usePutTranslationMutation,
 	useGetAllTenantsQuery,
-	useGetTenantQuery
+	useGetTenantQuery,
+	usePutTenantMutation
 } = api;

@@ -4,6 +4,7 @@ import TenantDrawer from "@/components/TenantDrawer";
 import TenantTable from "@/components/TenantTable";
 import { Button } from "@mui/material";
 import { Tenant } from "@/types/Tenant";
+import { usePutTenantMutation } from "@/app/services/api";
 
 export default function Tenants() {
 	const [drawerOpenState, setDrawerOpenState] = useState(false);
@@ -43,10 +44,25 @@ export default function Tenants() {
 		];
 	}
 
+	const [mutate, result] = usePutTenantMutation();
+
 	return (
 		<div>
 			<NavBar />
+			<button
+				onClick={() => {
+					mutate({
+						tenantName: "tenant1",
+						defaultTranslationLanguage: "it",
+						listAvailableLanguages: ["en", "it"],
+						numberTranslationAvailable: 20,
+					});
+				}}
+			>
+				New Tenant 1
+			</button>
 			<TenantTable toggleDrawer={toggleDrawer} items={getTenants(tenantKey)} changeTenantName={changeTenantKey} />
+
 			{tenantKey !== "" && (
 				<TenantDrawer
 					open={drawerOpenState}

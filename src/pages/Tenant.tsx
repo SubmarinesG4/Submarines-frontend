@@ -7,6 +7,7 @@ export default function Tenant() {
 	if (!id) return <>error</>;
 
 	const { data } = useGetTenantQuery({ id });
+
 	return (
 		<div>
 			<NavBar />
