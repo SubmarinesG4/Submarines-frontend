@@ -8,6 +8,7 @@ export type UseDrawerListOptions = {
 };
 
 export type UseDrawerListReturn = {
+  user: any;
   data: Translation | undefined;
   isLoading: boolean;
   error: FetchBaseQueryError | SerializedError | undefined;

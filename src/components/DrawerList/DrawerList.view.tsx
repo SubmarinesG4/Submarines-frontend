@@ -26,6 +26,7 @@ import {
 } from "@/app/services/helpers";
 import dayjs from "dayjs";
 import TabPanel, { a11yProps } from "../TabPanel/TabPanel.view";
+import { useAppSelector } from "@/app/store";
 
 export default function View(props: DrawerListProps) {
   const [value, setTabValue] = React.useState(0);
@@ -34,7 +35,7 @@ export default function View(props: DrawerListProps) {
   const [updateTranslation, putStatus] = api.usePutTranslationMutation();
   const [deleteTranslation, deleteStatus] = api.useDeleteTranslationMutation();
 
-  const { data, error, isLoading } = useLogic({
+  const { user, data, error, isLoading } = useLogic({
     translationKey: props.translationKey,
   });
 
@@ -50,8 +51,18 @@ export default function View(props: DrawerListProps) {
     published: false,
     versionedTranslations: [],
   };
-
-  let userRole = localStorage.getItem("currentUserRole");
+  let userRole = "";
+  if (Array.isArray(user.role)) {
+    if (user.role.includes("super-admin")) {
+      userRole = "super-admin";
+    } else if (user.role.includes("admin")) {
+      userRole = "admin";
+    } else {
+      userRole = user.role[0];
+    }
+  } else {
+    userRole = user.role;
+  }
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
@@ -98,14 +109,14 @@ export default function View(props: DrawerListProps) {
       defaultTranslationLanguage: translation.defaultTranslationLanguage,
       defaultTranslationinLanguage: info.defaultLanguageContent,
       translations: languages,
-      modifiedbyUser: localStorage.getItem("currentUser") || "",
+      modifiedbyUser: user.username,
       published: info.published,
     };
 
     //console.log(result);
 
     updateTranslation({
-      tenant: "tenant3", // TODO: chiamata tenant da fare in alto
+      tenant: user.attributes["custom:tenantId"], // TODO: chiamata tenant da fare in alto
       key: translation.translationKey,
       translation: result,
     })
@@ -131,7 +142,7 @@ export default function View(props: DrawerListProps) {
 
   const handleDelete = () => {
     deleteTranslation({
-      tenant: "tenant3", // TODO: chiamata tenant da fare in alto
+      tenant: user.attributes["custom:tenantId"], // TODO: chiamata tenant da fare in alto
       key: translation.translationKey,
     })
       .unwrap()

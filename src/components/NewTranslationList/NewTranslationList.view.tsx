@@ -15,15 +15,28 @@ import {
   isErrorWithMessage,
 } from "@/app/services/helpers";
 import TabPanel, { a11yProps } from "../TabPanel/TabPanel.view";
+import useLogic from "./NewTranslationList.logic";
+import { useAppSelector } from "@/app/store";
 
 export default function View(props: NewTranslationListProps) {
   const [value, setTabValue] = React.useState(0);
   const { register, handleSubmit, reset, setValue } = useForm();
   const [updateTranslation, putStatus] = api.usePutTranslationMutation();
 
-  let data = props;
-
-  const userRole: string = localStorage.getItem("currentUserRole") || "";
+  const logic = useLogic({});
+  let userRole = "";
+  const user = useAppSelector((state) => state.userSlice.user);
+  if (Array.isArray(user.role)) {
+    if (user.role.includes("super-admin")) {
+      userRole = "super-admin";
+    } else if (user.role.includes("admin")) {
+      userRole = "admin";
+    } else {
+      userRole = user.role[0];
+    }
+  } else {
+    userRole = user.role;
+  }
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
@@ -38,7 +51,7 @@ export default function View(props: NewTranslationListProps) {
         if (key === "defaultLanguageContent") {
           data[key] = null;
           languages.push({
-            language: props.defaultTranslationLanguage,
+            language: logic.defaultTranslationLanguage,
             content: data[key],
           });
         } else if (key !== "published") {
@@ -53,7 +66,7 @@ export default function View(props: NewTranslationListProps) {
       } else if (key !== "published" && key !== "translationKey") {
         if (key === "defaultLanguageContent") {
           languages.push({
-            language: props.defaultTranslationLanguage,
+            language: logic.defaultTranslationLanguage,
             content: data[key],
           });
         } else {
@@ -66,16 +79,16 @@ export default function View(props: NewTranslationListProps) {
     }
 
     let result: TranslationSend = {
-      defaultTranslationLanguage: props.defaultTranslationLanguage,
+      defaultTranslationLanguage: logic.defaultTranslationLanguage,
       defaultTranslationinLanguage: data.defaultLanguageContent,
       translations: languages,
-      modifiedbyUser: localStorage.getItem("currentUser") || "",
+      modifiedbyUser: user.username,
       published: data.published,
     };
 
     console.log(result);
     updateTranslation({
-      tenant: "tenant3",
+      tenant: logic.tenant,
       key: data.translationKey,
       translation: result,
     })
@@ -137,13 +150,13 @@ export default function View(props: NewTranslationListProps) {
               aria-label="basic tabs example"
             >
               <Tab
-                label={props.defaultTranslationLanguage + " (default)"}
+                label={logic.defaultTranslationLanguage + " (default)"}
                 key={0}
                 {...a11yProps(0)}
               />
-              {props.languages
+              {logic.languages
                 .filter(
-                  (language) => language !== props.defaultTranslationLanguage
+                  (language) => language !== logic.defaultTranslationLanguage
                 )
                 .map((language, index) => {
                   return (
@@ -165,8 +178,8 @@ export default function View(props: NewTranslationListProps) {
               {...register("defaultLanguageContent")}
             />
           </TabPanel>
-          {props.languages
-            .filter((language) => language !== props.defaultTranslationLanguage)
+          {logic.languages
+            .filter((language) => language !== logic.defaultTranslationLanguage)
             .map((language, index) => {
               return (
                 <TabPanel value={value} index={index + 1} key={index + 1}>

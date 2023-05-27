@@ -46,8 +46,6 @@ export default function View(props: TranslationDrawerProps) {
               toggleDrawer={props.toggleDrawer}
               setDrawerOpenState={props.setDrawerOpenState}
               showError={showError}
-              languages={["it", "en"]}
-              defaultTranslationLanguage="it"
             />
           )}
         </Drawer>

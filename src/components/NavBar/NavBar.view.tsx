@@ -14,6 +14,7 @@ import { NavBarProps } from "./NavBar.types";
 import useLogic from "./NavBar.logic";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { useNavigate } from "react-router-dom";
+import { useAppSelector } from "@/app/store";
 
 const pages = [{ name: "Tenants", route: "/tenants" }];
 
@@ -43,7 +44,19 @@ export default function View(props: NavBarProps) {
     setAnchorElUser(null);
   };
 
-  const userRole = localStorage.getItem("currentUserRole");
+  let userRole = "";
+  const user = useAppSelector((state) => state.userSlice.user);
+  if (Array.isArray(user.role)) {
+    if (user.role.includes("super-admin")) {
+      userRole = "super-admin";
+    } else if (user.role.includes("admin")) {
+      userRole = "admin";
+    } else {
+      userRole = user.role[0];
+    }
+  } else {
+    userRole = user.role;
+  }
 
   const navigateTo = (path: string, nav: boolean) => (event: any) => {
     if (nav) {
@@ -124,7 +137,7 @@ export default function View(props: NavBarProps) {
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar
-                  alt={localStorage.getItem("currentUser") || "User"}
+                  alt={user.username || "User"}
                   sx={{ bgcolor: "#1976d2", color: "white" }}
                 >
                   <AccountCircleIcon />
@@ -147,9 +160,6 @@ export default function View(props: NavBarProps) {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              <MenuItem key="Account" onClick={navigateTo("/account", false)}>
-                <Typography textAlign="center">Dettaglio Tenant</Typography>
-              </MenuItem>
               <MenuItem key="Logout" onClick={signOut}>
                 <Typography textAlign="center">Logout</Typography>
               </MenuItem>

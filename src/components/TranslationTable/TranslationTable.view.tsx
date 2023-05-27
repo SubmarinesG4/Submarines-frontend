@@ -134,7 +134,7 @@ export default function View(props: TranslationTableProps) {
               >
                 <TextField
                   id="phrase-filter-field"
-                  label="Frase"
+                  label="Chiave"
                   sx={{ maxWidth: "200px" }}
                   variant="filled"
                   size="small"
