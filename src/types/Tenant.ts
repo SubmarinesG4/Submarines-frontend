@@ -1,4 +1,3 @@
-
 interface Tenant {
 	tenantKey: string
 	tenantName: string
@@ -10,4 +9,10 @@ interface Tenant {
 	createdAt: Date
 }
 
-export type { Tenant };
+interface TableTenant {
+	defaultTranslationLanguage: string
+	numberTranslationAvailable: number
+	tenantName: string
+}
+
+export type { Tenant, TableTenant };

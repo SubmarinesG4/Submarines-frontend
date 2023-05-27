@@ -1,8 +1,2 @@
-import { UseTenantTable, TenantTableView } from "./TenantTable.types";
-import useLogic from "./TenantTable.logic";
-
-export const useTenantTable: UseTenantTable = useLogic
-
-import View from "./TenantTable.view"
-const TenantTable: TenantTableView = View
+import TenantTable from "./TenantTable.view"
 export default TenantTable

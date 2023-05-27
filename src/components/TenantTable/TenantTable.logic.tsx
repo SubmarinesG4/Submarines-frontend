@@ -1,9 +1,11 @@
-import { useGetAllTenantsQuery } from "@/app/services/api";
+import { useGetAllTenantsQuery } from "@/app/services/tenantsApiSlice";
 import { UseTenantTableOptions, UseTenantTableReturn } from "./TenantTable.types";
 
 function useLogic(options: UseTenantTableOptions): UseTenantTableReturn {
-	const { data } = useGetAllTenantsQuery();
-	return { tenants: data?.tenants || [] };
+	const { filter } = options;
+
+	const { data, isLoading, error } = useGetAllTenantsQuery();
+	return { data: data?.tenants || [], isLoading, error };
 }
 
 export default useLogic;

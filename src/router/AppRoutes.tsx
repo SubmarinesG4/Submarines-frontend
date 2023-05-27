@@ -1,14 +1,12 @@
-import { BrowserRouter, Navigate, Route, Routes as RouterRoutes } from "react-router-dom";
-import Home from "../pages/Home";
-import Login from "../pages/Login";
-import ResetPassword from "@/pages/ResetPassword";
-import Translations from "@/pages/Translations";
-import Tenants from "@/pages/Tenants";
-import Tenant from "@/pages/Tenant";
 import { useEffect, useState } from "react";
+import { BrowserRouter, Route, Routes as RouterRoutes, useLocation, useParams } from "react-router-dom";
+
+import LayoutsController from "@/components/LayoutsController";
+
 import { useUserActions } from "@/hooks/userUserActions";
-import { useSelector } from "react-redux";
 import { useAppSelector } from "@/app/store";
+import { UserRole } from "@/types/User";
+import routes from "./routes";
 
 export default function AppRoutes() {
 	return (
@@ -31,16 +29,32 @@ function Routes() {
 		checkSession();
 	}, []);
 
+	function checkRouteAuthorization(pathRoles: UserRole[] | undefined, userRoles: UserRole[]) {
+		if (!pathRoles) return true;
+		return pathRoles.some((pathRole) => userRoles.includes(pathRole));
+	}
+
 	if (!sessionChecked) return null;
 	return (
-		<RouterRoutes>
-			<Route path="/" element={!!user ? <Navigate to="/home" replace /> : <Navigate to="/login" replace />} />
-			<Route path="/login" element={!!user ? <Navigate to="/home" replace /> : <Login />} />
-			<Route path="/resetPassword" element={!!user ? <Navigate to="/home" replace /> : <ResetPassword />} />
-			<Route path="/home" element={!!user ? <Home /> : <Navigate to="/login" replace />} />
-			<Route path="/translations" element={!!user ? <Translations /> : <Navigate to="/login" replace />} />
-			<Route path="/tenants" element={!!user ? <Tenants /> : <Navigate to="/login" replace />} />
-			<Route path="/tenant/:id" element={!!user ? <Tenant /> : <Navigate to="/login" replace />} />
-		</RouterRoutes>
+		<LayoutsController>
+			<RouterRoutes>
+				{routes.map((route) => {
+					const userRoles: UserRole[] = user?.roles || ["unauthenticated"];
+					const userTenant = user?.attributes["custom:tenantId"];
+					let element = route.element;
+					return (
+						<Route
+							key={route.path}
+							path={route.path}
+							element={
+								checkRouteAuthorization(route.roles, userRoles)
+									? element(userRoles, userTenant)
+									: route.redirectElement(userRoles)
+							}
+						/>
+					);
+				})}
+			</RouterRoutes>
+		</LayoutsController>
 	);
 }

@@ -29,7 +29,6 @@ export default function Login() {
 	const { signIn, getNewPassword } = useUserActions();
 
 	let userRef = useRef(null);
-
 	async function loginSubmitHandle(data: FormValues) {
 		try {
 			let user = await signIn(data.email.trim(), data.password);
@@ -38,13 +37,15 @@ export default function Login() {
 				setStage(2);
 			} else {
 				let userGroup = user.signInUserSession.accessToken.payload["cognito:groups"];
+				userGroup = Array.isArray(userGroup) ? userGroup : userGroup[0];
 				dispatch(
 					setUser({
 						username: user.username,
-						role: userGroup,
+						roles: userGroup,
 						attributes: user.attributes,
 					})
 				);
+				localStorage.setItem("authToken", user.signInUserSession?.idToken?.jwtToken);
 			}
 		} catch (err: any) {
 			console.error("ERROR: ", err);

@@ -1,8 +1,2 @@
-import { UseHistoryList, HistoryListView } from "./HistoryList.types";
-import useLogic from "./HistoryList.logic";
-
-export const useHistoryList: UseHistoryList = useLogic;
-
-import View from "./HistoryList.view";
-const HistoryList: HistoryListView = View;
+import HistoryList from "./HistoryList.view";
 export default HistoryList;

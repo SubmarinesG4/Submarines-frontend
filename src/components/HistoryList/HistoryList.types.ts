@@ -4,23 +4,17 @@ import { FetchBaseQueryError } from "@reduxjs/toolkit/dist/query";
 import React from "react";
 
 export type UseHistoryListOptions = {
-  translationKey: string;
+	translationKey: string;
 };
 
 export type UseHistoryListReturn = {
-  data: Translation | undefined;
-  isLoading: boolean;
-  error: FetchBaseQueryError | SerializedError | undefined;
+	data: Translation | undefined;
+	isLoading: boolean;
+	error: FetchBaseQueryError | SerializedError | undefined;
 };
-
-export type UseHistoryList = (
-  options: UseHistoryListOptions
-) => UseHistoryListReturn;
 
 export type HistoryListProps = {
-  toggleDrawer: (open: boolean) => any;
-  showError: (message: string) => any;
-  translationKey: string;
+	toggleDrawer: (open: boolean) => any;
+	showError: (message: string) => any;
+	translationKey: string;
 };
-
-export type HistoryListView = React.FC<HistoryListProps>;

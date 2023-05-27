@@ -30,10 +30,11 @@ export const useUserActions = () => {
 				throw "No current user"
 			}
 			let userGroup = user.signInUserSession.accessToken.payload["cognito:groups"];
+			userGroup = Array.isArray(userGroup) ? userGroup : userGroup[0];
 			dispatch(
 				setUser({
 					username: user.username,
-					role: userGroup,
+					roles: userGroup,
 					attributes: user.attributes,
 				})
 			);

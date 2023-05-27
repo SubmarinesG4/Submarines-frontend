@@ -1,16 +1,18 @@
-import { Tenant } from "@/types/Tenant"
-import React from "react"
+import { TableTenant, Tenant } from "@/types/Tenant"
+import { SerializedError } from "@reduxjs/toolkit";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/dist/query";
 
-export type UseTenantTableOptions = {}
-
-export type UseTenantTableReturn = {}
-
-export type UseTenantTable = (options?: UseTenantTableOptions) => UseTenantTableReturn
-
-export type TenantTableProps = {
-	toggleDrawer: (open: boolean) => any
-	items: Tenant[]
-	changeTenantName: (TenantKey: string) => any
+export type UseTenantTableOptions = {
+	filter: { name: string };
 }
 
-export type TenantTableView = React.FC<TenantTableProps>
+export type UseTenantTableReturn = {
+	data: TableTenant[]
+	isLoading: boolean;
+	error: FetchBaseQueryError | SerializedError | undefined;
+}
+
+export type TenantTableProps = {
+	toggleDrawer: (open: boolean) => any;
+	showNew: () => any;
+};
