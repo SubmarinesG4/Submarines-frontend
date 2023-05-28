@@ -4,9 +4,7 @@ export type UseNewTranslationListReturn = {
 
 };
 
-
-export type NewTranslationListProps = {
-	toggleDrawer: (open: boolean) => any;
-	setDrawerOpenState: (open: boolean) => any;
+export type NewTenantFormProps = {
+	closeDrawer: () => void;
 	showError: (message: string) => any;
 };

@@ -7,7 +7,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
-import { Alert, Box, Button, IconButton, Snackbar, TextField, Typography } from "@mui/material";
+import { Box, Button, IconButton, TextField, Typography } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import { Filter } from "@/types/Filter";
 import { useForm } from "react-hook-form";
@@ -19,6 +19,7 @@ import { TenantTableProps } from "./TenantTable.types";
 import { useNavigate } from "react-router-dom";
 import { useDeleteTenantMutation } from "@/app/services/tenantsApiSlice";
 import ConfirmDialog from "../ConfirmDialog";
+import { useSnackbarMessage } from "@/hooks/useSnackbarMessage";
 
 interface Column {
 	id: "key" | "defaultLanguage" | "translationNumber" | "actions";
@@ -44,15 +45,16 @@ export default function View(props: TenantTableProps) {
 	const [page, setPage] = React.useState(0);
 	const [rowsPerPage, setRowsPerPage] = React.useState(10);
 	const { register, handleSubmit, control, reset } = useForm<Filter>();
-	const [errorOpen, setErrorOpen] = React.useState(false);
-	const [errorMessage, setErrorMessage] = React.useState("");
 	const [queryFilter, setQueryFilter] = React.useState({
 		name: "",
 	});
 	const [tenantToDelete, setTenantToDelete] = React.useState<string | boolean>(false);
 
+	const setSnackbarMessage = useSnackbarMessage();
+
 	const { data, isLoading, error } = useTenantTable({ filter: queryFilter });
 	const [deleteTenant] = useDeleteTenantMutation();
+
 	const handleChangePage = (event: unknown, newPage: number) => {
 		setPage(newPage);
 	};
@@ -74,10 +76,6 @@ export default function View(props: TenantTableProps) {
 		setQueryFilter({ name: "" });
 	};
 
-	const handleErrorClose = () => {
-		setErrorOpen(false);
-	};
-
 	async function handleTenantDelete(tenant: string) {
 		try {
 			const result = await deleteTenant({
@@ -87,8 +85,7 @@ export default function View(props: TenantTableProps) {
 				throw "Error";
 			}
 		} catch (e) {
-			setErrorOpen(true);
-			setErrorMessage("Error deleting user");
+			setSnackbarMessage("Error deleting user");
 		}
 	}
 
@@ -105,7 +102,7 @@ export default function View(props: TenantTableProps) {
 							<Typography variant="h5" component="div">
 								Tenants
 							</Typography>
-							<Button variant="contained" sx={{ marginLeft: "1em" }} onClick={props.showNew && props.showNew()}>
+							<Button variant="contained" sx={{ marginLeft: "1em" }} onClick={props.showNew}>
 								Nuovo Tenant
 							</Button>
 						</Box>
@@ -169,6 +166,9 @@ export default function View(props: TenantTableProps) {
 															<IconButton onClick={() => navigate(`/translations/${row.tenantName}`)}>
 																<LaunchIcon />
 															</IconButton>
+															{/* 	<IconButton sx={{ marginRight: "0.2em" }} onClick={() => props.showEdit(row.tenantName)}>
+																<EditIcon />
+															</IconButton> */}
 															<IconButton
 																sx={{ marginRight: "0.2em" }}
 																onClick={() => navigate(`/tenant/${row.tenantName}`)}
@@ -198,11 +198,6 @@ export default function View(props: TenantTableProps) {
 								onPageChange={handleChangePage}
 								onRowsPerPageChange={handleChangeRowsPerPage}
 							/>
-							<Snackbar open={errorOpen} autoHideDuration={5000} onClose={handleErrorClose}>
-								<Alert onClose={handleErrorClose} severity="error" sx={{ width: "100%" }}>
-									{errorMessage}
-								</Alert>
-							</Snackbar>
 						</Box>
 					)}
 					{data.length === 0 && <Box sx={{ margin: "1em" }}>Nessun Tenant</Box>}
@@ -214,7 +209,7 @@ export default function View(props: TenantTableProps) {
 	return (
 		<div>
 			<ConfirmDialog
-				title={"Elimina tenant?"}
+				title={`Elimina ${tenantToDelete}?`}
 				description={"Sicuro di voler eliminare questo tenant?"}
 				open={!!tenantToDelete}
 				setOpen={setTenantToDelete}

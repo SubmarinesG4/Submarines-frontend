@@ -11,7 +11,6 @@ export type UseTenantDrawerReturn = {
 }
 
 export type TenantDrawerProps = {
-	open: boolean;
-	toggleDrawer: (open: boolean) => any;
-	setDrawerOpenState: (open: boolean) => any;
+	open: string;
+	closeDrawer: () => void
 }

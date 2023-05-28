@@ -1,41 +1,19 @@
-import * as React from "react";
 import Drawer from "@mui/material/Drawer";
 
 import { TenantDrawerProps } from "./TenantDrawer.types";
-import { Alert, Snackbar } from "@mui/material";
-import NewTenantList from "../NewTenantList";
+import NewTenantForm from "../NewTenantForm";
+import { useSnackbarMessage } from "@/hooks/useSnackbarMessage";
+import EditTenantForm from "../EditTenantForm";
 
 export default function View(props: TenantDrawerProps) {
-	const [errorOpen, setErrorOpen] = React.useState(false);
-	const [errorMessage, setErrorMessage] = React.useState("");
-
-	const handleErrorClose = () => {
-		setErrorOpen(false);
-	};
-
-	const showError = (message: string) => {
-		setErrorMessage(message);
-		setErrorOpen(true);
-	};
+	const setSnackbarMessage = useSnackbarMessage();
 
 	return (
-		<div>
-			<React.Fragment key={"top"}>
-				<Drawer anchor={"top"} open={props.open}>
-					{props.open && (
-						<NewTenantList
-							toggleDrawer={props.toggleDrawer}
-							setDrawerOpenState={props.setDrawerOpenState}
-							showError={showError}
-						/>
-					)}
-				</Drawer>
-			</React.Fragment>
-			<Snackbar open={errorOpen} autoHideDuration={5000} onClose={handleErrorClose}>
-				<Alert onClose={handleErrorClose} severity="error" sx={{ width: "100%" }}>
-					{errorMessage}
-				</Alert>
-			</Snackbar>
-		</div>
+		<Drawer anchor={"top"} open={!!props.open}>
+			{props.open === "new" && <NewTenantForm closeDrawer={props.closeDrawer} showError={setSnackbarMessage} />}
+			{props.open && props.open !== "new" && (
+				<EditTenantForm tenantName={props.open} closeDrawer={props.closeDrawer} showError={setSnackbarMessage} />
+			)}
+		</Drawer>
 	);
 }

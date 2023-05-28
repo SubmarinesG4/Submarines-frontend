@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { useAppDispatch } from "@/app/store";
 import { setUser } from "@/app/slices/userSlice";
 import { useUserActions } from "@/hooks/userUserActions";
+import { useSnackbarMessage } from "@/hooks/useSnackbarMessage";
 
 interface FormValues {
 	email: string;
@@ -21,12 +22,12 @@ export default function Login() {
 		getValues,
 		formState: { errors, isValid },
 	} = useForm<FormValues>({ mode: "all" });
+	const { signIn, getNewPassword } = useUserActions();
+
 	const dispatch = useAppDispatch();
 	const [stage, setStage] = useState(1); // 1 = login stage, 2 = first access stage, 3 = complete new password stage
 
-	const [open, setOpen] = useState<boolean>(false);
-	const [message, setMessage] = useState<string>("");
-	const { signIn, getNewPassword } = useUserActions();
+	const setSnackbarMessage = useSnackbarMessage();
 
 	let userRef = useRef(null);
 	async function loginSubmitHandle(data: FormValues) {
@@ -49,8 +50,7 @@ export default function Login() {
 			}
 		} catch (err: any) {
 			console.error("ERROR: ", err);
-			setOpen(true);
-			setMessage(err.message);
+			setSnackbarMessage(err.message);
 		}
 	}
 
@@ -60,15 +60,14 @@ export default function Login() {
 			setStage(1);
 		} catch (err: any) {
 			console.error("ERROR: ", err);
-			setOpen(true);
-			setMessage(err.message);
+			setSnackbarMessage(err.message);
 		}
 	}
 
 	return (
 		<Box className="formBox">
 			<Card className="cardFormBox">
-				<img src="public\login.png" className="imgHeading" alt="accesso" />
+				<img src="/login.png" className="imgHeading" alt="accesso" />
 				<CardContent>
 					{stage === 1 && (
 						<form onSubmit={handleSubmit(loginSubmitHandle)}>
@@ -184,23 +183,6 @@ export default function Login() {
 					)}
 				</CardContent>
 			</Card>
-			<Snackbar
-				open={open}
-				autoHideDuration={6000}
-				onClose={() => {
-					setOpen(false);
-				}}
-			>
-				<Alert
-					onClose={() => {
-						setOpen(false);
-					}}
-					severity="error"
-					sx={{ width: "100%" }}
-				>
-					{message}
-				</Alert>
-			</Snackbar>
 		</Box>
 	);
 }

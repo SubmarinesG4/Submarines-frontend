@@ -4,20 +4,10 @@ import { TranslationDrawerProps } from "./TranslationDrawer.types";
 import DrawerList from "../DrawerList";
 import HistoryList from "../HistoryList";
 import NewTranslationList from "../NewTranslationList";
-import { Alert, Snackbar } from "@mui/material";
+import { useSnackbarMessage } from "@/hooks/useSnackbarMessage";
 
 export default function View(props: TranslationDrawerProps) {
-	const [errorOpen, setErrorOpen] = React.useState(false);
-	const [errorMessage, setErrorMessage] = React.useState("");
-
-	const handleErrorClose = () => {
-		setErrorOpen(false);
-	};
-
-	const showError = (message: string) => {
-		setErrorMessage(message);
-		setErrorOpen(true);
-	};
+	const setSnackbarMessage = useSnackbarMessage();
 
 	return (
 		<div>
@@ -27,14 +17,14 @@ export default function View(props: TranslationDrawerProps) {
 						<DrawerList
 							toggleDrawer={props.toggleDrawer}
 							setDrawerOpenState={props.setDrawerOpenState}
-							showError={showError}
+							showError={setSnackbarMessage}
 							translationKey={props.translationKey}
 						/>
 					)}
 					{props.open && props.view === 2 && (
 						<HistoryList
 							toggleDrawer={props.toggleDrawer}
-							showError={showError}
+							showError={setSnackbarMessage}
 							translationKey={props.translationKey}
 						/>
 					)}
@@ -42,16 +32,11 @@ export default function View(props: TranslationDrawerProps) {
 						<NewTranslationList
 							toggleDrawer={props.toggleDrawer}
 							setDrawerOpenState={props.setDrawerOpenState}
-							showError={showError}
+							showError={setSnackbarMessage}
 						/>
 					)}
 				</Drawer>
 			</React.Fragment>
-			<Snackbar open={errorOpen} autoHideDuration={5000} onClose={handleErrorClose}>
-				<Alert onClose={handleErrorClose} severity="error" sx={{ width: "100%" }}>
-					{errorMessage}
-				</Alert>
-			</Snackbar>
 		</div>
 	);
 }

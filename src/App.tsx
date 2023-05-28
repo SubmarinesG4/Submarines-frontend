@@ -7,6 +7,7 @@ import { store } from "./app/store";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import "dayjs/locale/it";
+import AppSnackbar from "./components/AppSnackbar";
 
 Amplify.configure({
 	Auth: {
@@ -21,6 +22,7 @@ function App() {
 		<ThemeProvider theme={defaultTheme}>
 			<LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="it">
 				<Provider store={store}>
+					<AppSnackbar />
 					<AppRoutes />
 				</Provider>
 			</LocalizationProvider>

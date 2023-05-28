@@ -3,11 +3,13 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 
 import { api } from "./services/api";
 import userSlice from "./slices/userSlice"
+import messagesSlice from "./slices/messagesSlice"
 
 export const store = configureStore({
 	reducer: {
 		[api.reducerPath]: api.reducer,
-		userSlice
+		userSlice,
+		messagesSlice
 	},
 	middleware: (getDefaultMiddleware) =>
 		getDefaultMiddleware().concat(api.middleware),

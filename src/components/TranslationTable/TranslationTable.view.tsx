@@ -29,6 +29,7 @@ import { Controller, useForm } from "react-hook-form";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import useTranslationTable from "./TranslationTable.logic";
+import { useSnackbarMessage } from "@/hooks/useSnackbarMessage";
 
 interface Column {
 	id: "key" | "translation" | "actions" | "date" | "published";
@@ -49,11 +50,10 @@ const columns: readonly Column[] = [
 ];
 
 export default function View(props: TranslationTableProps) {
+	const { register, handleSubmit, control, reset } = useForm<Filter>();
+
 	const [page, setPage] = React.useState(0);
 	const [rowsPerPage, setRowsPerPage] = React.useState(10);
-	const { register, handleSubmit, control, reset } = useForm<Filter>();
-	const [errorOpen, setErrorOpen] = React.useState(false);
-	const [errorMessage, setErrorMessage] = React.useState("");
 	const [queryFilter, setQueryFilter] = React.useState({
 		phrase: "",
 		date: "",
@@ -85,10 +85,6 @@ export default function View(props: TranslationTableProps) {
 	const handleReset = () => {
 		reset({ phrase: "", date: null, published: "all" });
 		setQueryFilter({ phrase: "", date: "", published: "" });
-	};
-
-	const handleErrorClose = () => {
-		setErrorOpen(false);
 	};
 
 	const handleTableRendering = () => {
@@ -219,11 +215,6 @@ export default function View(props: TranslationTableProps) {
 								onPageChange={handleChangePage}
 								onRowsPerPageChange={handleChangeRowsPerPage}
 							/>
-							<Snackbar open={errorOpen} autoHideDuration={5000} onClose={handleErrorClose}>
-								<Alert onClose={handleErrorClose} severity="error" sx={{ width: "100%" }}>
-									{errorMessage}
-								</Alert>
-							</Snackbar>
 						</Box>
 					)}
 					{rows.length === 0 && <Box sx={{ margin: "1em" }}>Nessuna traduzione</Box>}

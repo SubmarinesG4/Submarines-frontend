@@ -1,4 +1,4 @@
-import { UseNewTranslationListOptions, UseNewTranslationListReturn } from "./NewTenantList.types";
+import { UseNewTranslationListOptions, UseNewTranslationListReturn } from "./EditTenantForm.types";
 
 function useLogic(options: UseNewTranslationListOptions): UseNewTranslationListReturn {
 	return {};

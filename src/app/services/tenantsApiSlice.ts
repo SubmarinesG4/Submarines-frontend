@@ -34,6 +34,27 @@ const tenantsApi = api.injectEndpoints({
 				"Tenants",
 			],
 		}),
+		updateTenant: builder.mutation<
+			any,
+			{
+				tenantName: string;
+				numberTranslationAvailable: number;
+				listAvailableLanguages: string[];
+				defaultTranslationLanguage: string;
+			}
+		>({
+			query({ tenantName, ...tenant }) {
+				return {
+					url: `/${tenantName}`,
+					method: "PATCH",
+					body: tenant,
+				};
+			},
+			invalidatesTags: (result, error, arg) => [
+				{ type: "Tenants", id: arg.tenantName },
+				"Tenants",
+			],
+		}),
 		deleteTenant: builder.mutation<
 			any,
 			{
@@ -62,5 +83,6 @@ export const {
 	useGetAllTenantsQuery,
 	useGetTenantQuery,
 	usePutTenantMutation,
-	useDeleteTenantMutation
+	useDeleteTenantMutation,
+	useUpdateTenantMutation
 } = tenantsApi;

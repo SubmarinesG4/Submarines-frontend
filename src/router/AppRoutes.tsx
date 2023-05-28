@@ -36,25 +36,25 @@ function Routes() {
 
 	if (!sessionChecked) return null;
 	return (
-		<LayoutsController>
-			<RouterRoutes>
-				{routes.map((route) => {
-					const userRoles: UserRole[] = user?.roles || ["unauthenticated"];
-					const userTenant = user?.attributes["custom:tenantId"];
-					let element = route.element;
-					return (
-						<Route
-							key={route.path}
-							path={route.path}
-							element={
-								checkRouteAuthorization(route.roles, userRoles)
-									? element(userRoles, userTenant)
-									: route.redirectElement(userRoles)
-							}
-						/>
-					);
-				})}
-			</RouterRoutes>
-		</LayoutsController>
+		<RouterRoutes>
+			{routes.map((route) => {
+				const userRoles: UserRole[] = user?.roles || ["unauthenticated"];
+				const userTenant = user?.attributes["custom:tenantId"];
+				let element = route.element;
+				return (
+					<Route
+						key={route.path}
+						path={route.path}
+						element={
+							checkRouteAuthorization(route.roles, userRoles) ? (
+								<LayoutsController name={route.layout}>{element(userRoles, userTenant)}</LayoutsController>
+							) : (
+								route.redirectElement(userRoles)
+							)
+						}
+					/>
+				);
+			})}
+		</RouterRoutes>
 	);
 }

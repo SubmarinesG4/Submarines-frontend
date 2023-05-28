@@ -3,23 +3,24 @@ import TenantDrawer from "@/components/TenantDrawer";
 import TenantTable from "@/components/TenantTable";
 
 export default function Tenants() {
-	const [drawerOpenState, setDrawerOpenState] = useState(false);
+	const [drawerOpenState, setDrawerOpenState] = useState<string>("");
 
-	const toggleDrawer = (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
-		if (event.type === "keydown") {
-			return;
-		}
-		setDrawerOpenState(open);
+	const closeDrawer = () => {
+		setDrawerOpenState("");
 	};
 
-	const showNew = () => (event: any) => {
-		setDrawerOpenState(true);
+	const showNew = () => {
+		setDrawerOpenState("new");
+	};
+
+	const showEdit = (tenant: string) => {
+		setDrawerOpenState(tenant);
 	};
 
 	return (
-		<div>
-			<TenantTable toggleDrawer={toggleDrawer} showNew={showNew} />
-			<TenantDrawer open={drawerOpenState} toggleDrawer={toggleDrawer} setDrawerOpenState={setDrawerOpenState} />
-		</div>
+		<>
+			<TenantTable showEdit={showEdit} showNew={showNew} />
+			<TenantDrawer open={drawerOpenState} closeDrawer={closeDrawer} />
+		</>
 	);
 }

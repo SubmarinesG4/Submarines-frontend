@@ -1,10 +1,8 @@
 import { ReactNode } from "react";
 
-export type LayoutsProps = {
-	name?: string;
-	children: ReactNode;
-};
+export type Layout = "withNavBar" | "default"
 
 export type LayoutControllerProps = {
 	children: ReactNode;
+	name: Layout
 };

@@ -13,6 +13,6 @@ export type UseTenantTableReturn = {
 }
 
 export type TenantTableProps = {
-	toggleDrawer: (open: boolean) => any;
 	showNew: () => any;
+	showEdit: (tenant: string) => any;
 };

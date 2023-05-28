@@ -36,10 +36,10 @@ export default function ConfirmDialog({ action, open, setOpen, title, descriptio
 				<DialogContentText id="alert-dialog-description">{description}</DialogContentText>
 			</DialogContent>
 			<DialogActions>
-				<Button onClick={handleYes}>Sì</Button>
 				<Button onClick={handleNo} autoFocus>
 					No
 				</Button>
+				<Button onClick={handleYes}>Sì</Button>
 			</DialogActions>
 		</Dialog>
 	);
