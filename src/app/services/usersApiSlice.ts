@@ -1,3 +1,4 @@
+import { UserRole } from "@/types/User";
 import { api } from "./api";
 
 const usersApi = api.injectEndpoints({
@@ -6,6 +7,10 @@ const usersApi = api.injectEndpoints({
 			any,
 			{
 				tenant: string;
+				userEmail: string,
+				name: string,
+				lastName: string,
+				role: UserRole
 			}
 		>({
 			query({ tenant, ...user }) {
@@ -13,11 +18,8 @@ const usersApi = api.injectEndpoints({
 					url: `${tenant}/invite`,
 					method: "POST",
 					body: {
-						"userEmail": "corradin.loris@gmail.com",
-						"username": "corradin.loris@gmail.com",
-						"name": "Loris",
-						"lastName": "Corradin",
-						"role": "admin"
+						...user,
+						username: user.userEmail
 					}
 				}
 			},

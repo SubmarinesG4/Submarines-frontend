@@ -16,8 +16,11 @@ const translationsApi = api.injectEndpoints({
 				filter: { phrase: string; date: string; published: string };
 			}
 		>({
-			query: ({ tenant, filter }) =>
-				`${tenant}/translations?published=${filter.published}&date=${filter.date}&word=${filter.phrase}`,
+			query: ({ tenant, filter }) => {
+				console.log(filter)
+				if (!filter.date && !filter.phrase && !filter.published) return `${tenant}/translations`
+				return `${tenant}/translations?published=${filter.published}&date=${filter.date}&word=${filter.phrase}`
+			},
 			providesTags: ["Translations"],
 		}),
 		getTranslation: builder.query<Translation, { tenant: string; key: string }>(

@@ -4,7 +4,17 @@ import TextField from "@mui/material/TextField";
 
 import { Controller, useForm } from "react-hook-form";
 import { NewTranslationListProps } from "./NewTenantList.types";
-import { Chip, FormControl, FormGroup, InputLabel, MenuItem, OutlinedInput, Select, Stack } from "@mui/material";
+import {
+	Chip,
+	FormControl,
+	FormGroup,
+	InputLabel,
+	MenuItem,
+	OutlinedInput,
+	Select,
+	Stack,
+	Typography,
+} from "@mui/material";
 
 import { isFetchBaseQueryError, isErrorWithMessage } from "@/app/services/helpers";
 import useNewTranslationList from "./NewTenantList.logic";
@@ -49,6 +59,7 @@ export default function View(props: NewTranslationListProps) {
 		<Box sx={{ width: "auto", padding: "1em 1em" }} role="presentation">
 			<FormGroup>
 				<form onSubmit={handleSubmit(handleFormSubmit)}>
+					<Typography variant="h5">Nuovo Tenant</Typography>
 					<TextField
 						id="tenantName"
 						label="TenantName"

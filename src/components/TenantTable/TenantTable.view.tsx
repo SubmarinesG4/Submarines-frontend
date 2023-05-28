@@ -18,6 +18,7 @@ import useTenantTable from "./TenantTable.logic";
 import { TenantTableProps } from "./TenantTable.types";
 import { useNavigate } from "react-router-dom";
 import { useDeleteTenantMutation } from "@/app/services/tenantsApiSlice";
+import ConfirmDialog from "../ConfirmDialog";
 
 interface Column {
 	id: "key" | "defaultLanguage" | "translationNumber" | "actions";
@@ -48,6 +49,7 @@ export default function View(props: TenantTableProps) {
 	const [queryFilter, setQueryFilter] = React.useState({
 		name: "",
 	});
+	const [tenantToDelete, setTenantToDelete] = React.useState<string | boolean>(false);
 
 	const { data, isLoading, error } = useTenantTable({ filter: queryFilter });
 	const [deleteTenant] = useDeleteTenantMutation();
@@ -75,6 +77,20 @@ export default function View(props: TenantTableProps) {
 	const handleErrorClose = () => {
 		setErrorOpen(false);
 	};
+
+	async function handleTenantDelete(tenant: string) {
+		try {
+			const result = await deleteTenant({
+				tenant: tenant,
+			});
+			if (!!(result as any).error) {
+				throw "Error";
+			}
+		} catch (e) {
+			setErrorOpen(true);
+			setErrorMessage("Error deleting user");
+		}
+	}
 
 	const handleTableRendering = () => {
 		if (isLoading) {
@@ -108,10 +124,10 @@ export default function View(props: TenantTableProps) {
 									size="small"
 									{...register("phrase")}
 								/>
-								<Button sx={{ marginLeft: "1em" }} variant="text" onClick={handleSubmit(handleFormSubmit)}>
+								<Button sx={{ marginLeft: "1em" }} variant="text" type="submit">
 									Filtra
 								</Button>
-								<Button sx={{ marginLeft: "1em" }} variant="text" onClick={handleReset}>
+								<Button sx={{ marginLeft: "1em" }} variant="text" type="button" onClick={handleReset}>
 									Reset
 								</Button>
 							</Box>
@@ -161,7 +177,7 @@ export default function View(props: TenantTableProps) {
 															</IconButton>
 															<IconButton
 																sx={{ marginRight: "0.2em" }}
-																onClick={() => deleteTenant({ tenant: row.tenantName })}
+																onClick={() => setTenantToDelete(row.tenantName)}
 															>
 																<DeleteIcon />
 															</IconButton>
@@ -195,5 +211,16 @@ export default function View(props: TenantTableProps) {
 		}
 	};
 
-	return <div>{handleTableRendering()}</div>;
+	return (
+		<div>
+			<ConfirmDialog
+				title={"Elimina tenant?"}
+				description={"Sicuro di voler eliminare questo tenant?"}
+				open={!!tenantToDelete}
+				setOpen={setTenantToDelete}
+				action={() => handleTenantDelete(tenantToDelete as string)}
+			/>
+			{handleTableRendering()}
+		</div>
+	);
 }

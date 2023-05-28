@@ -2,8 +2,11 @@ import { api } from "./api";
 
 const tenantsApi = api.injectEndpoints({
 	endpoints: builder => ({
-		getAllTenants: builder.query<any, void>({
-			query: () => `/tenants`,
+		getAllTenants: builder.query<any, { filter?: string }>({
+			query: ({ filter }) => {
+				if (filter) return `/tenants&word=${filter}`
+				return `/tenants`
+			},
 			providesTags: ["Tenants"],
 		}),
 		getTenant: builder.query<any, { id: string }>({

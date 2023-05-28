@@ -16,8 +16,6 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "@/app/store";
 
-const pages = [{ name: "Tenants", route: "/tenants" }];
-
 export default function View(props: NavBarProps) {
 	const navigate = useNavigate();
 	const { signOut } = useNavBar(props);
@@ -40,16 +38,9 @@ export default function View(props: NavBarProps) {
 		setAnchorElUser(null);
 	};
 
-	let userRole = "";
 	const user = useAppSelector((state) => state.userSlice.user);
-	if (user?.roles.includes("super-admin")) {
-		userRole = "super-admin";
-	} else if (user?.roles.includes("admin")) {
-		userRole = "admin";
-	} else {
-		userRole = "traduttore";
-	}
-
+	const showTenantsMenuItem = user?.roles.includes("super-admin");
+	const userTenant = user?.attributes["custom:tenantId"];
 	const navigateTo = (path: string, nav: boolean) => (event: any) => {
 		if (nav) {
 			handleCloseNavMenu();
@@ -91,9 +82,6 @@ export default function View(props: NavBarProps) {
 							aria-haspopup="true"
 							onClick={handleOpenNavMenu}
 							color="inherit"
-							sx={{
-								display: userRole !== null && userRole === "traduttore" ? "none" : "block",
-							}}
 						>
 							<MenuIcon />
 						</IconButton>
@@ -115,11 +103,21 @@ export default function View(props: NavBarProps) {
 								display: "block",
 							}}
 						>
-							{pages.map((page) => (
-								<MenuItem key={page.name} onClick={navigateTo(page.route, true)}>
-									<Typography textAlign="center">{page.name}</Typography>
+							{showTenantsMenuItem && (
+								<MenuItem key={"Tenants"} onClick={navigateTo("/tenants", true)}>
+									<Typography textAlign="center">{"Tenants"}</Typography>
 								</MenuItem>
-							))}
+							)}
+							{!showTenantsMenuItem && (
+								<MenuItem key={"Tenant"} onClick={navigateTo(`/tenant/${userTenant}`, true)}>
+									<Typography textAlign="center">{`Info ${userTenant}`}</Typography>
+								</MenuItem>
+							)}
+							{!showTenantsMenuItem && (
+								<MenuItem key={"Traduzioni"} onClick={navigateTo(`/translations/${userTenant}`, true)}>
+									<Typography textAlign="center">{`Traduzioni`}</Typography>
+								</MenuItem>
+							)}
 						</Menu>
 					</Box>
 					{title}
