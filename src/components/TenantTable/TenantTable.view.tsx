@@ -12,10 +12,12 @@ import EditIcon from "@mui/icons-material/Edit";
 import { Filter } from "@/types/Filter";
 import { useForm } from "react-hook-form";
 import LaunchIcon from "@mui/icons-material/Launch";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 import useTenantTable from "./TenantTable.logic";
 import { TenantTableProps } from "./TenantTable.types";
 import { useNavigate } from "react-router-dom";
+import { useDeleteTenantMutation } from "@/app/services/tenantsApiSlice";
 
 interface Column {
 	id: "key" | "defaultLanguage" | "translationNumber" | "actions";
@@ -48,7 +50,7 @@ export default function View(props: TenantTableProps) {
 	});
 
 	const { data, isLoading, error } = useTenantTable({ filter: queryFilter });
-
+	const [deleteTenant] = useDeleteTenantMutation();
 	const handleChangePage = (event: unknown, newPage: number) => {
 		setPage(newPage);
 	};
@@ -148,14 +150,20 @@ export default function View(props: TenantTableProps) {
 																justifyContent: "flex-end",
 															}}
 														>
+															<IconButton onClick={() => navigate(`/translations/${row.tenantName}`)}>
+																<LaunchIcon />
+															</IconButton>
 															<IconButton
 																sx={{ marginRight: "0.2em" }}
 																onClick={() => navigate(`/tenant/${row.tenantName}`)}
 															>
 																<EditIcon />
 															</IconButton>
-															<IconButton onClick={() => navigate(`/translations/${row.tenantName}`)}>
-																<LaunchIcon />
+															<IconButton
+																sx={{ marginRight: "0.2em" }}
+																onClick={() => deleteTenant({ tenant: row.tenantName })}
+															>
+																<DeleteIcon />
 															</IconButton>
 														</Box>
 													</TableCell>

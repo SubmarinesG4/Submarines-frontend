@@ -1,15 +1,15 @@
-import { useAppSelector } from "@/app/store";
 import { UseNewTranslationListOptions, UseNewTranslationListReturn } from "./NewTranslationList.types";
 import { useGetTenantQuery } from "@/app/services/tenantsApiSlice";
+import { useParams } from "react-router-dom";
 
 function useLogic(options: UseNewTranslationListOptions): UseNewTranslationListReturn {
-	const user = useAppSelector((state) => state.userSlice.user);
+	const { id } = useParams();
 	const tenantQuery = useGetTenantQuery({
-		id: user?.attributes["custom:tenantId"]!,
+		id: id!,
 	});
 
 	return {
-		tenant: user?.attributes["custom:tenantId"]!,
+		tenant: id!,
 		languages: tenantQuery.data?.listAvailableLanguages || [],
 		defaultTranslationLanguage: tenantQuery.data?.defaultTranslationLanguage || "",
 	};

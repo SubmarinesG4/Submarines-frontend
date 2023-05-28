@@ -8,6 +8,7 @@ const tenantsApi = api.injectEndpoints({
 		}),
 		getTenant: builder.query<any, { id: string }>({
 			query: ({ id }) => `/${id}`,
+			providesTags: result => [{ type: "Tenant", id: result.tenantName }],
 		}),
 		putTenant: builder.mutation<
 			any,
@@ -30,6 +31,26 @@ const tenantsApi = api.injectEndpoints({
 				"Tenants",
 			],
 		}),
+		deleteTenant: builder.mutation<
+			any,
+			{
+				tenant: string;
+			}
+		>({
+			query({ tenant }) {
+				return {
+					url: `${tenant}`,
+					method: "DELETE",
+					body: {}
+				};
+			},
+			// Invalidates all Post-type queries providing the `LIST` id - after all, depending of the sort order,
+			// that newly created post could show up in any lists.
+			invalidatesTags: (result, error, arg) => [
+				{ type: "Tenants", id: arg.tenant },
+				"Tenants",
+			],
+		}),
 	})
 })
 
@@ -38,4 +59,5 @@ export const {
 	useGetAllTenantsQuery,
 	useGetTenantQuery,
 	usePutTenantMutation,
+	useDeleteTenantMutation
 } = tenantsApi;

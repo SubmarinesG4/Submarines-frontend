@@ -10,9 +10,9 @@ import "dayjs/locale/it";
 
 Amplify.configure({
 	Auth: {
-		region: "eu-central-1",
-		userPoolId: "eu-central-1_OcyZlYZEj",
-		userPoolWebClientId: "7d5ij9ol01l2405r2i5d4vgdvo",
+		region: import.meta.env.VITE_AMP_REGION,
+		userPoolId: import.meta.env.VITE_AMP_USERPOOL,
+		userPoolWebClientId: import.meta.env.VITE_AMP_WEB_CLIENT_ID,
 	},
 });
 
