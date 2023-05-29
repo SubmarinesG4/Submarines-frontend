@@ -1,12 +1,16 @@
-export type UseNewTranslationListOptions = {};
+import { TenantDetailed } from "@/types/Tenant";
 
-export type UseNewTranslationListReturn = {
-
+export type UseNewTranslationListOptions = {
+  id: string;
 };
 
+export type UseNewTranslationListReturn = {
+  tenant: TenantDetailed | undefined;
+  isLoading: boolean;
+};
 
 export type EditTenantFormProps = {
-	tenantName: string
-	closeDrawer: () => void;
-	showError: (message: string) => any;
+  tenantName: string;
+  closeDrawer: () => void;
+  showError: (message: string) => any;
 };

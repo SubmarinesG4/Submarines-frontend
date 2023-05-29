@@ -13,7 +13,7 @@ import { Filter } from "@/types/Filter";
 import { useForm } from "react-hook-form";
 import LaunchIcon from "@mui/icons-material/Launch";
 import DeleteIcon from "@mui/icons-material/Delete";
-
+import InfoIcon from "@mui/icons-material/Info";
 import useTenantTable from "./TenantTable.logic";
 import { TenantTableProps } from "./TenantTable.types";
 import { useNavigate } from "react-router-dom";
@@ -214,16 +214,19 @@ export default function View(props: TenantTableProps) {
                                 >
                                   <LaunchIcon />
                                 </IconButton>
-                                {/* 	<IconButton sx={{ marginRight: "0.2em" }} onClick={() => props.showEdit(row.tenantName)}>
-																<EditIcon />
-															</IconButton> */}
+                                <IconButton
+                                  sx={{ marginRight: "0.2em" }}
+                                  onClick={() => props.showEdit(row.tenantName)}
+                                >
+                                  <EditIcon />
+                                </IconButton>
                                 <IconButton
                                   sx={{ marginRight: "0.2em" }}
                                   onClick={() =>
                                     navigate(`/tenant/${row.tenantName}`)
                                   }
                                 >
-                                  <EditIcon />
+                                  <InfoIcon />
                                 </IconButton>
                                 <IconButton
                                   sx={{ marginRight: "0.2em" }}

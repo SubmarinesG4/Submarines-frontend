@@ -1,3 +1,4 @@
+import { Tenant, TenantDetailed } from "@/types/Tenant";
 import { api } from "./api";
 
 const tenantsApi = api.injectEndpoints({
@@ -9,9 +10,10 @@ const tenantsApi = api.injectEndpoints({
       },
       providesTags: ["Tenants"],
     }),
-    getTenant: builder.query<any, { id: string }>({
+    getTenant: builder.query<TenantDetailed, { id: string }>({
       query: ({ id }) => `/${id}`,
-      providesTags: (result) => [{ type: "Tenant", id: result.tenantName }],
+      providesTags: (result) =>
+        result ? [{ type: "Tenant", id: result.tenantName }] : ["Tenants"],
     }),
     putTenant: builder.mutation<
       any,

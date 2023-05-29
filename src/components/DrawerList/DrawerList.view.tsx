@@ -112,7 +112,7 @@ export default function View(props: DrawerListProps) {
       defaultTranslationLanguage: translation.defaultTranslationLanguage,
       defaultTranslationinLanguage: info.defaultLanguageContent,
       translations: languages,
-      modifiedbyUser: user.username,
+      //modifiedbyUser: user.username,
       published: info.published,
     };
 
