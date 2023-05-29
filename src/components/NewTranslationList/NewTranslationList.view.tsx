@@ -46,13 +46,13 @@ export default function View(props: NewTranslationListProps) {
     for (let key in data) {
       if (data[key] === undefined) {
         if (key === "defaultLanguageContent") {
-          data[key] = null;
+          data[key] = "";
           languages.push({
             language: logic.defaultTranslationLanguage,
             content: data[key],
           });
         } else if (key !== "published") {
-          data[key] = null;
+          data[key] = "";
           languages.push({
             language: key,
             content: data[key],
