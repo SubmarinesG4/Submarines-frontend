@@ -79,7 +79,7 @@ export default function View(props: NewTranslationListProps) {
       defaultTranslationLanguage: logic.defaultTranslationLanguage,
       defaultTranslationinLanguage: data.defaultLanguageContent,
       translations: languages,
-      //modifiedbyUser: user?.username!,
+      modifiedbyUser: user?.username!,
       published: data.published,
     };
 

@@ -65,7 +65,6 @@ export default function View(props: DrawerListProps) {
   } else {
     userRole = user.roles[0];
   }
-  console.log("userRole", userRole);
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
@@ -112,7 +111,7 @@ export default function View(props: DrawerListProps) {
       defaultTranslationLanguage: translation.defaultTranslationLanguage,
       defaultTranslationinLanguage: info.defaultLanguageContent,
       translations: languages,
-      //modifiedbyUser: user.username,
+      modifiedbyUser: user.username,
       published: info.published,
     };
 
