@@ -7,18 +7,11 @@ Progetto generato usando il template `react-ts` di [Vite](https://vitejs.dev/).
 ## Installazione
 
 - Usare `npm i` per installare le dipendenze
+- Inserire variabili d'ambiente necessarie in un file `.env` nella root directory del progetto come mostrato nel file d'esempio `.env.example`
 - Usare `npm run dev` per far partire un server locale di sviluppo
 
 A seguito dell'esecuzione di questi comandi verrà avviato una versione di sviluppo utilizzabile in locale dell'applicativo,
 raggiungibile all'indirizzo di base visualizzato nel terminale
-
-## Funzionalità attuali
-
-Inizialmente al caricamento della pagina l'utente viene reindirizzato ad una maschera di login, qualsiasi combinazione di username e password permetterà l'accesso.
-
-L'applicazione ricorderà l'utente tramite una entry settata nel `localStorage` del browser e non sarà necessario eseguire il login per accessi successivi.
-
-Dopo aver effettuato l'accesso l'utente verrà reindirizzato alla pagina principale in cui è visualizzabile una lista di chiavi di traduzione recuperate da backend, inoltre tramite il bottone sottostante la lista sarà possibile inserire una traduzione casuale e aggiornare la lista.
 
 ## Tecnologie utilizzate
 
@@ -47,36 +40,25 @@ Si è utilizzata questa libreria che offre componenti e metodologie per dividere
 
 Libreria di componenti grafici pre-realizzati che offre funzionalità per la gestione degli stili e del tema grafico.
 
-### Gestione richieste HTTP e dati asincroni
+### REDUX
 
-Trattandosi di una tematica molto complicata si è deciso di usare le due seguenti librerie che gestiscono la problematica.
+Per affrontare la problematica della gestione dello stato globale e dello stato dei dati proveniente da backend si è deciso di usare la soluzione unica Redux, scelta per essere una soluzione ben definita e documentata.
+In particolare si è usato la libreria [Redux toolkit](https://redux-toolkit.js.org/) che semplifica il setup di Redux.
 
-- [Axios](https://axios-http.com/docs/intro/) Libreria utilizzata per eseguire chiamate HTTP
-
-- [React-query](https://react-query-v3.tanstack.com/) Libreria usata gestire il flusso del recupero dati dal backend e l'integrazione di essi nei componenti React. Semplifica notevolmente la problematica di gestire la natura asincrona della problematica e molti altre tematiche tra le quali caching dei dati, gestione del flusso di errore e caricamento e altro.
-
-### Gestione stato globale
-
-Si è scelto di utilizzare un'altra soluzione per gestire la problematica di stato globale presente nel client, divisa dalla gestione dei dati provenienti dal backend. La libreria scelta è:
-
-- [Zustand](https://github.com/pmndrs/zustand) Consiste in utilities che permettono di gestire e integrare in React degli stores che rappresentano dati che possono essere comuni a più componenti (ad esempio token di autenticazione, stati specifici dell'interfaccia)
-
-### React-hook-form
-
-[Sito ufficiale](https://react-hook-form.com/)
-
-Questa libreria espone componenti e funzionalità per la gestione di form.
+Per la parte riguardante il recupero da dati dall'api si è deciso di usare un tool integrato in Redux quale [Redux toolkit](https://redux-toolkit.js.org/rtk-query/overview).
 
 ### Autenticazione
 
-L'autenticazione in questa versione è solamente simulata, si pianifica di usare le librerie di amazon che si interfacciano con AWS Cognito per gestire la problematica.
+[Sito ufficiale](https://docs.amplify.aws/lib/auth/getting-started/q/platform/js/)
+L'autenticazione è gestita tramite la libreria Amplify di AWS, tramite Amazon Cognito.
 
 # Guida alle directory
 
 - `src/components` contiene i componenti dell'interfaccia
+- `src/hooks` contiene i custom hooks usati nel progetto
 - `src/globals` contiene file di configurazione globali necessari all'applicativo
 - `src/router` contiene la configurazione del router che gestisce la divisione in pagine e l'accesso a esse
 - `src/pages` contiene i componenti che rappresentano le varie pagine gestite dal router
-- `src/queries` contiene le funzionalità che gestiscono la problematica del recupero di dati dal backend
-- `src/stores` contiene le funzionalità che servono alla gestione dello stato globale
+- `src/app/services` contiene le funzionalità che gestiscono la problematica del recupero di dati dal backend
+- `src/app/slices` contiene le funzionalità che servono alla gestione dello stato globale
 - `src/types` contiene tipi utili all'intero applicativo
